@@ -10,6 +10,12 @@ Thierry Schellenbach, Founder/ CTO at Fashiolista
 
 .. image:: https://secure.travis-ci.org/tschellenbach/Snaptastic.png?branch=master
 
+Command line usage
+
+python snap.py make-snapshots solr
+python snap.py mount-snapshots solr
+
+
 Example Settings File
 
 REGION = 'eu-west-1'

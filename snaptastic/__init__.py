@@ -41,6 +41,7 @@ from snapshotter import Snapshotter
 from ebs_volume import EBSVolume
 from snaptastic import settings
 
+
 import logging.config
 logging.config.dictConfig(settings.LOGGING_CONFIG)
 
@@ -55,4 +56,12 @@ def register(snapshotter):
     
 
 def get_snapshotter(snapshotter_name):
+    error_format = 'No Snapshotter %s defined, registered Snapshotters are %s'
+    if not snapshotter_name in snapshotters:
+        raise ValueError(error_format % (snapshotter_name, snapshotters.keys()))
     return snapshotters[snapshotter_name]
+
+
+
+#register the examples
+from examples import *
