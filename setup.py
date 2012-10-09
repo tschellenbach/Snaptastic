@@ -16,7 +16,9 @@ tests_require = [
     'coverage'
 ]
 
-install_requires = []
+install_requires = [
+    'boto'
+]
 
 license_text = open('LICENSE.txt').read()
 long_description = open('README.md').read()
