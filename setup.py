@@ -15,7 +15,8 @@ tests_require = [
 ]
 
 install_requires = [
-    'boto'
+    'boto',
+    'argh'
 ]
 
 license_text = open('LICENSE.txt').read()
