@@ -23,7 +23,7 @@ LOGGING_CONFIG = {
             'class': 'logging.FileHandler',
             'filename': os.path.join('/var', 'log', 'snaptastic', 'info.log')
         }
-                 
+
     },
     'loggers': {
         'snaptastic': {
@@ -36,7 +36,3 @@ LOGGING_CONFIG = {
 
 import logging.config
 logging.config.dictConfig(LOGGING_CONFIG)
-
-
-
-

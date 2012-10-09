@@ -1,5 +1,6 @@
 
-import sys, os
+import sys
+import os
 import subprocess
 
 path = os.path.abspath(__file__)
@@ -16,7 +17,7 @@ from snaptastic import Snapshotter
 class BaseTest(unittest2.TestCase):
     def setUp(self):
         pass
-    
+
     def get_test_snapshotter(self):
         con = mock.Mock()
         userdata = dict(role='role', environment='test', cluster='cluster')
@@ -35,9 +36,11 @@ class TestFreeze(unittest2.TestCase):
     def test_freeze(self):
         with mock.patch('subprocess.check_output') as check:
             with freeze('/mnt/test/'):
-                check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'], stderr=subprocess.STDOUT)
-            check.assert_called_with(['xfs_freeze', '-u', '/mnt/test/'], stderr= -2)
-            
+                check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'],
+                                         stderr=subprocess.STDOUT)
+            check.assert_called_with(
+                ['xfs_freeze', '-u', '/mnt/test/'], stderr=-2)
+
     def test_freeze_fail(self):
         with mock.patch('subprocess.check_output') as check:
             try:
@@ -46,7 +49,8 @@ class TestFreeze(unittest2.TestCase):
                     raise Exception('test')
             except:
                 pass
-            check.assert_called_with(['xfs_freeze', '-u', '/mnt/test/'], stderr=subprocess.STDOUT)
+            check.assert_called_with(
+                ['xfs_freeze', '-u', '/mnt/test/'], stderr=subprocess.STDOUT)
 
 
 class TestCreateSnapshot(BaseTest):
@@ -56,8 +60,9 @@ class TestCreateSnapshot(BaseTest):
         with mock.patch('subprocess.check_output') as check:
             snap.make_snapshots([volume])
             self.assertEqual(check.call_count, 2)
-            check.assert_called_with(['xfs_freeze', '-u', '/mnt/test'], stderr=subprocess.STDOUT)
-            
+            check.assert_called_with(
+                ['xfs_freeze', '-u', '/mnt/test'], stderr=subprocess.STDOUT)
+
     def test_make_snapshot(self):
         snap = self.get_test_snapshotter()
         con = snap.con
@@ -67,13 +72,13 @@ class TestCreateSnapshot(BaseTest):
         args, kwargs = con.create_snapshot.call_args
         description = kwargs['description']
         self.assertEqual(description, 'snapshot-role-test-cluster-/mnt/test')
-    
+
     def test_snapshot_name(self):
         snap = self.get_test_snapshotter()
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         snapshot_name = snap.get_snapshot_name(volume)
         self.assertEqual(snapshot_name, 'snapshot-role-test-cluster-/mnt/test')
-        
+
 
 class TestMounting(BaseTest):
     def test_mount_volumes(self):
@@ -83,8 +88,6 @@ class TestMounting(BaseTest):
         snap.attach_volume = mock.Mock()
         with mock.patch('subprocess.check_output'):
             mounted = snap.mount_volumes([volume])
-        
-    
 
 
 if __name__ == '__main__':

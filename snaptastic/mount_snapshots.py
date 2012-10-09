@@ -8,15 +8,12 @@ from json import loads
 
 
 def main():
-    
+
     configure_logging('mount_snapshots.log')
-    
+
     snap = Snapshotter()
     snap.mount_volumes()
 
-            
 
 if __name__ == '__main__':
     main()
-
-

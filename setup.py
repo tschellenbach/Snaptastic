@@ -8,8 +8,6 @@ and mounting of snapshots on AWS/EC2 EBS volumes.
 """
 
 
-
-
 tests_require = [
     'mock',
     'pep8',

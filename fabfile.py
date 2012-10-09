@@ -24,7 +24,7 @@ def publish(test='yes'):
 def validate():
     with cd(PROJECT_ROOT):
         local('pep8 --exclude=migrations --ignore=E501,E225 snaptastic')
-        local('python test.py')
+        local('python -m unittest snaptastic.tests')
 
 
 def clean():

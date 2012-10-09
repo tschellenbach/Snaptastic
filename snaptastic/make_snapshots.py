@@ -3,10 +3,11 @@
 """
 from tagged_snapshots import get_mounted_volumes, get_volumes, create_snapshot, configure_logging
 
+
 def main():
-    
+
     configure_logging('make_snapshots.log')
-    
+
     snap = Snapshotter()
     snapshots = snap.make_snapshots()
 
