@@ -22,8 +22,7 @@ def mount_snapshots(snapshotter_name, verbosity=2):
     snap = snapshotter_class()
     snap.mount_snapshots()
 
-    
+
 p = ArghParser()
 p.add_commands([make_snapshots, mount_snapshots])
 p.dispatch()
-

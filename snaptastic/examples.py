@@ -3,7 +3,7 @@ from snaptastic import Snapshotter, EBSVolume, register
 
 class TestSnapshotter(Snapshotter):
     name = 'test'
-    
+
     def get_volumes(self):
         '''
         Get the volumes for this instance, customize this at will
@@ -11,18 +11,18 @@ class TestSnapshotter(Snapshotter):
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         volumes = [volume]
         return volumes
-    
+
 register(TestSnapshotter)
 
 
 class SOLRSnapshotter(Snapshotter):
     name = 'solr'
-    
+
     def get_volumes(self):
         volume = EBSVolume('/dev/sdf1', '/mnt/index', size=200)
         volumes = [volume]
         return volumes
-    
+
 register(SOLRSnapshotter)
 
 
@@ -31,7 +31,7 @@ class PostgreSQLSnapshotter(Snapshotter):
     Customized mounting hooks for postgres
     '''
     name = 'postgres'
-    
+
     def get_volumes(self):
         volume_dicts = [
             {"device": "/dev/sdf1", "mount_point":
@@ -78,7 +78,6 @@ class PostgreSQLSnapshotter(Snapshotter):
         subprocess.check_output(['chmod', '-R', '0700', '/var/lib/postgresql'])
         subprocess.check_output(
             ['chown', '-R', 'postgres:postgres', '/var/lib/postgresql'])
-        
+
 
 register(PostgreSQLSnapshotter)
-
