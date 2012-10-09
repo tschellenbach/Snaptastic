@@ -19,8 +19,8 @@ python snap.py mount-snapshots solr
 Example Settings File
 
 REGION = 'eu-west-1'
-AWS_ACCESS_KEY_ID = 'AKIAI3G42EFBKHLCPXFQ'
-AWS_SECRET_ACCESS_KEY = 'AwRnLC0tGEYCXvWP71wc1RFXXI5QmoaiEeHs5VZJ'
+AWS_ACCESS_KEY_ID = 'ExampleKey'
+AWS_SECRET_ACCESS_KEY = 'ExampleSecret'
 
 #create snapshotters
 from snaptastic import Snapshotter, EBSVolume
@@ -60,6 +60,7 @@ Workflow
 * fab validate (checks pep8 and unittests)
 * fab publish (if tests are ok, publishes the new version, tag, pypi)
 * fab clean (attempt to auto cleanup pep8 mistakes)
+* Running tests 
 
 Django Jobs
 -----------
