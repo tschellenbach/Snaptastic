@@ -23,13 +23,10 @@ def publish(test='yes'):
 
 def validate():
     with cd(PROJECT_ROOT):
-        local('pep8 --exclude=migrations --ignore=E501,E225 django_facebook open_facebook')
+        local('pep8 --exclude=migrations --ignore=E501,E225 snaptastic')
         local('python test.py')
 
 
 def clean():
     local('bash -c "autopep8 -i *.py"')
-    local('bash -c "autopep8 -i django_facebook/*.py"')
-    local('bash -c "autopep8 -i open_facebook/*.py"')
-    local('bash -c "autopep8 -i django_facebook/management/commands/*.py"')
-    local('bash -c "autopep8 -i django_facebook/tests_utils/*.py"')
+    local('bash -c "autopep8 -i snaptastic/*.py"')
