@@ -43,3 +43,16 @@ from snaptastic import settings
 
 import logging.config
 logging.config.dictConfig(settings.LOGGING_CONFIG)
+
+snapshotters = {}
+
+
+def register(snapshotter):
+    '''
+    Register your snapshotter
+    '''
+    snapshotters[snapshotter.name] = snapshotter
+    
+
+def get_snapshotter(snapshotter_name):
+    return snapshotters[snapshotter_name]
