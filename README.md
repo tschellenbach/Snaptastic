@@ -51,7 +51,7 @@ Todo
 
 * Prevent you from freezing the root filesystem
 * Auto terminate volumes after instance termination
-* Travis
+* Error testing against boto and real file system
 * Pypi
 
 
