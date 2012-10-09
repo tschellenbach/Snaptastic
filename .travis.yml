@@ -15,7 +15,7 @@ install:
   - python setup.py install
 before_script:
   - "pep8 --exclude=migrations --ignore=E501,E225 django_facebook open_facebook"
-#  - pyflakes -x W src
+  - pyflakes -x W snaptastic
 script:
   - pip install -e .
   - coverage run setup.py test
