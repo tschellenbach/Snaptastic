@@ -60,7 +60,10 @@ Workflow
 * fab validate (checks pep8 and unittests)
 * fab publish (if tests are ok, publishes the new version, tag, pypi)
 * fab clean (attempt to auto cleanup pep8 mistakes)
-* Running tests 
+
+Running tests
+
+* python -m unittest snaptastic.tests
 
 Django Jobs
 -----------
