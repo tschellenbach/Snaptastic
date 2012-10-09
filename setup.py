@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
-from snaptastic import __version__, __maintainer__, __email__
+from snaptastic.meta import __version__, __maintainer__, __email__
 
 
 DESCRIPTION = """Snaptastic is a python tool to enable easy snapshotting

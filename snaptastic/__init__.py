@@ -24,16 +24,9 @@ http://www.doughellmann.com/PyMOTW/contextlib/
 
 '''
 
-
-__author__ = 'Thierry Schellenbach'
-__copyright__ = 'Copyright 2012, Thierry Schellenbach'
-__credits__ = [
-    'Mike Ryan, Thierry Schellenbach, mellowmorning.com, @tschellenbach']
-__license__ = 'BSD'
-__version__ = '0.0.1'
-__maintainer__ = 'Thierry Schellenbach'
-__email__ = 'thierryschellenbach@gmail.com'
-__status__ = 'Production'
+# wark around to allow setup.py to import from snaptastic.meta instead of here
+from snaptastic.meta import __author__, __copyright__, __credits__, __license__
+from snaptastic.meta import __version__, __maintainer__, __email__, __status__
 
 
 from snaptastic.utils import get_ec2_conn
