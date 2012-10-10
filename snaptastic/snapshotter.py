@@ -208,7 +208,8 @@ class Snapshotter(object):
             waited += 1
         
         if waited == MAX_ATTACHMENT_WAIT:
-            raise exceptions.AttachmentException('Device didnt attach within % seconds', MAX_ATTACHMENT_WAIT)
+            error_format = 'Device didnt attach within % seconds'
+            raise exceptions.AttachmentException(error_format, MAX_ATTACHMENT_WAIT)
 
         return boto_volume
 
