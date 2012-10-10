@@ -1,5 +1,5 @@
 ############################################################################################################################################
-Snaptastic by Mike Ryan & Thierry Schellenbach (`mellowmorning.com <http://www.mellowmorning.com/>`_)
+Snaptastic by Mike Ryan & Thierry Schellenbach [mellowmorning.com](http://www.mellowmorning.com/)
 ############################################################################################################################################
 
 About the Author
@@ -28,18 +28,18 @@ python snap.py mount-snapshots solr
 
 Example Settings File
 
-REGION = 'eu-west-1'
-AWS_ACCESS_KEY_ID = 'ExampleKey'
-AWS_SECRET_ACCESS_KEY = 'ExampleSecret'
+    REGION = 'eu-west-1'
+    AWS_ACCESS_KEY_ID = 'ExampleKey'
+    AWS_SECRET_ACCESS_KEY = 'ExampleSecret'
 
-#create snapshotters
-from snaptastic import Snapshotter, EBSVolume
+    #create snapshotters
+    from snaptastic import Snapshotter, EBSVolume
 
-class SOLRSnapshotter(Snapshotter):
-    def get_volumes(self):
-        volume = EBSVolume('/dev/sdf1', '/mnt/index', size=200)
-        volumes = [volume]
-        return volumes
+    class SOLRSnapshotter(Snapshotter):
+        def get_volumes(self):
+            volume = EBSVolume('/dev/sdf1', '/mnt/index', size=200)
+            volumes = [volume]
+            return volumes
 
 For more examples see examples.py
 
@@ -51,8 +51,8 @@ Snaptastic searches for its setting file at:
 
 Features
 
-* Gracefull failure handling
-* Freezes for the absoulte minimal required duration
+* Graceful failure handling
+* Freezes for the absolute minimal required duration
 * Batches boto API calls for faster batch volume mounting/snapshotting
 * Tested codebase
 
