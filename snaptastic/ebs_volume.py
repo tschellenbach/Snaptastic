@@ -19,7 +19,7 @@ class EBSVolume(object):
         self.mount_point = mount_point
 
     def __repr__(self):
-        return 'EBSVolume on %s from %s(%s)' % (self.mount_point, self.device, self.size)
+        return 'EBSVolume on %s from %s(%s GB)' % (self.mount_point, self.device, self.size)
             
 
     @property
@@ -55,7 +55,7 @@ class EBSVolume(object):
         '''
         cmd = self.FORMAT_CMD % {'device': self.instance_device}
         try:
-            logger.info('formatting device %s', self.instance_device)
+            logger.info('formatting device %s with command %s', self.instance_device, cmd)
             subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError, e:
             msg = 'Error formatting %s: %s' % (self.instance_device, e.output)
