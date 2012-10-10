@@ -11,7 +11,7 @@ class EBSVolume(object):
     Small wrapper class for specifying your desired EBS volume setup
     '''
     MOUNT_CMD = 'mount -t xfs -o defaults %(device)s %(mount_point)s'
-    UNMOUNT_CMD = 'unmount %(device)s'
+    UNMOUNT_CMD = 'umount %(device)s'
     FORMAT_CMD = 'mkfs.xfs %(device)s'
 
     def __init__(self, device, size, mount_point=None):
@@ -54,6 +54,7 @@ class EBSVolume(object):
         try:
             mount_info = {'device': self.instance_device, 'mount_point': self.mount_point}
             cmd = self.UNMOUNT_CMD % mount_info
+            logger.info('unmounting using command %s', cmd)
             subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError, e:
             msg = 'Error unmounting %s: %s' % (self.instance_device, e.output)
