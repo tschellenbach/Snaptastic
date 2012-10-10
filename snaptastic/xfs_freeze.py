@@ -19,7 +19,7 @@ class Freeze(object):
     def __enter__(self):
         # Freezing the root filesystem will cause the instance to become
         # permanently unresponsive, so let's make sure we don't do that
-        if os.stat('/')st_dev == os.stat(self.mount_point).st_dev:
+        if os.stat('/').st_dev == os.stat(self.mount_point).st_dev:
             raise FreezeException(
                 'Refusing to freeze device, as it contains "/"')
         logger.info('Freezing %s', self.mount_point)
