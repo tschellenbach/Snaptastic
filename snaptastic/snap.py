@@ -24,6 +24,7 @@ def mount_snapshots(snapshotter_name, verbosity=2):
     snap = snapshotter_class()
     snap.mount_snapshots()
 
+
 @command
 def unmount_snapshots(snapshotter_name, verbosity=2):
     snapshotter_class = get_snapshotter(snapshotter_name)
@@ -56,7 +57,6 @@ def test(verbosity=2):
         logger.info('found instance metadata %s', metadata)
     except Exception, e:
         logger.exception('Metadata lookup doesnt work, error %s', e)
-    
     
 
 p = ArghParser()
