@@ -18,7 +18,6 @@ class Freeze(object):
 
     def __enter__(self):
         from snaptastic.utils import is_root_dev
-        print is_root_dev
         # Freezing the root filesystem will cause the instance to become
         # permanently unresponsive, so let's make sure we don't do that
         root_dev = is_root_dev(self.mount_point)
