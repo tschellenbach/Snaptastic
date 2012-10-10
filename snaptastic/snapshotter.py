@@ -150,6 +150,14 @@ class Snapshotter(object):
 
         #mount the volume
         ebs_volume.mount()
+        
+    def unmount_snapshots(self, volumes):
+        volumes = volumes or self.get_volumes()
+        logger.info('unmounting volumes %s', volumes)
+        for vol in volumes:
+            volume_id = self.get_volume_id(vol)
+            self.detach_volume(volume_id)
+        return volumes
 
     '''
     Volume related functionality
@@ -215,6 +223,11 @@ class Snapshotter(object):
             raise exceptions.AttachmentException(error_format, MAX_ATTACHMENT_WAIT)
 
         return boto_volume
+    
+    def detach_volume(self, volume_id):
+        logger.info('now detaching %s', volume_id)
+        detached = self.con.detach_volume(volume_id)
+        return detached
 
     def get_bdm(self):
         bdm = self.con.get_instance_attribute(

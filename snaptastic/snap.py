@@ -24,6 +24,12 @@ def mount_snapshots(snapshotter_name, verbosity=2):
     snap = snapshotter_class()
     snap.mount_snapshots()
 
+@command
+def unmount_snapshots(snapshotter_name, verbosity=2):
+    snapshotter_class = get_snapshotter(snapshotter_name)
+    snap = snapshotter_class()
+    snap.unmount_snapshots()
+
 
 @command
 def list_volumes(snapshotter_name, verbosity=2):
@@ -54,5 +60,7 @@ def test(verbosity=2):
     
 
 p = ArghParser()
-p.add_commands([make_snapshots, mount_snapshots, list_volumes, test])
+commands = [make_snapshots, mount_snapshots, 
+            list_volumes, unmount_snapshots, test]
+p.add_commands(commands)
 p.dispatch()
