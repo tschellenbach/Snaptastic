@@ -57,10 +57,10 @@ def test(verbosity=2):
         logger.info('found instance metadata %s', metadata)
     except Exception, e:
         logger.exception('Metadata lookup doesnt work, error %s', e)
-    
+
 
 p = ArghParser()
-commands = [make_snapshots, mount_snapshots, 
+commands = [make_snapshots, mount_snapshots,
             list_volumes, unmount_snapshots, test]
 p.add_commands(commands)
 p.dispatch()

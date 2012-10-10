@@ -22,7 +22,6 @@ class EBSVolume(object):
 
     def __repr__(self):
         return 'EBSVolume on %s from %s(%s GB)' % (self.mount_point, self.device, self.size)
-            
 
     @property
     def instance_device(self):
@@ -50,10 +49,11 @@ class EBSVolume(object):
             msg = 'Error mounting %s: %s' % (self.instance_device, e.output)
             logger.error(msg)
             raise exceptions.MountException(msg)
-        
+
     def unmount(self):
         try:
-            mount_info = {'device': self.instance_device, 'mount_point': self.mount_point}
+            mount_info = {'device': self.instance_device,
+                          'mount_point': self.mount_point}
             cmd = self.UNMOUNT_CMD % mount_info
             logger.info('unmounting using command %s', cmd)
             subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
@@ -68,7 +68,8 @@ class EBSVolume(object):
         '''
         cmd = self.FORMAT_CMD % {'device': self.instance_device}
         try:
-            logger.info('formatting device %s with command %s', self.instance_device, cmd)
+            logger.info('formatting device %s with command %s',
+                        self.instance_device, cmd)
             subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError, e:
             msg = 'Error formatting %s: %s' % (self.instance_device, e.output)

@@ -88,7 +88,8 @@ class Snapshotter(object):
     def make_snapshot(self, vol):
         #get a snapshot name
         snapshot_name = self.get_snapshot_name(vol)
-        logger.info('preparing to create a snapshot with name %s', snapshot_name)
+        logger.info(
+            'preparing to create a snapshot with name %s', snapshot_name)
         # find the volume ID for this device
         volume_id = self.get_volume_id(vol)
         #get the tags, note that these are used for finding the right snapshot
@@ -150,7 +151,7 @@ class Snapshotter(object):
 
         #mount the volume
         ebs_volume.mount()
-        
+
     def unmount_snapshots(self, volumes=None):
         '''
         Unmounting the volumes, mainly for testing
@@ -209,7 +210,7 @@ class Snapshotter(object):
         logger.info(message_format, boto_volume.id, self.instance_id)
         self.con.attach_volume(
             boto_volume.id, self.instance_id, ebs_volume.device)
-        
+
         logger.info('Starting to poll till volume is fully attached')
         # drink some coffee and wait
         waited = 0
@@ -222,13 +223,14 @@ class Snapshotter(object):
             logger.info('Waiting for device: %s' % ebs_volume.instance_device)
             sleep(1)
             waited += 1
-        
+
         if waited == MAX_ATTACHMENT_WAIT:
             error_format = 'Device didnt attach within % seconds'
-            raise exceptions.AttachmentException(error_format, MAX_ATTACHMENT_WAIT)
+            raise exceptions.AttachmentException(
+                error_format, MAX_ATTACHMENT_WAIT)
 
         return boto_volume
-    
+
     def detach_volume(self, volume_id):
         logger.info('now detaching %s', volume_id)
         detached = self.con.detach_volume(volume_id)
@@ -261,7 +263,8 @@ class Snapshotter(object):
         try:
             volume_id = bdm_mapping[vol.device].volume_id
         except KeyError:
-            msg = '%s not found in block device mapping %s' % (vol.device, bdm_mapping)
+            msg = '%s not found in block device mapping %s' % (
+                vol.device, bdm_mapping)
             raise exceptions.MissingVolume(msg)
         return volume_id
 
