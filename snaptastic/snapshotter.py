@@ -31,7 +31,7 @@ class Snapshotter(object):
     '''
     SNAPSHOT_EXPIRY_DAYS = 7
     name = None
-    
+
     __metaclass__ = metaclass.SnapshotterRegisteringMetaClass
 
     def __init__(self, userdata=None, metadata=None, connection=None, bdm=None):

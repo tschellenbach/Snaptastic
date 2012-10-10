@@ -24,11 +24,6 @@ if not setup_install:
     logging.config.dictConfig(settings.LOGGING_CONFIG)
 
 
-
-
-
-
-
 if not setup_install:
     #register the examples
     from examples import *
