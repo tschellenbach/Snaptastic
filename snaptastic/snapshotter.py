@@ -179,6 +179,7 @@ class Snapshotter(object):
         tags['mount-point'] = vol.mount_point
         logger.info('tagging volume %s with tags %s', boto_volume.id, tags)
         add_tags(boto_volume, tags)
+        logger.info('tags added succesfully')
 
         return boto_volume
 
