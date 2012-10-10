@@ -102,7 +102,7 @@ class Snapshotter(object):
         add_tags(snapshot, tags)
         return snapshot
 
-    def mount_volumes(self, volumes=None):
+    def mount_snapshots(self, volumes=None):
         '''
         Loops through the volumes and runs mount_volume on them
         '''
@@ -111,14 +111,14 @@ class Snapshotter(object):
         self.pre_mounts(volumes)
         for vol in volumes:
             self.pre_mount(vol)
-            self.mount_volume(vol)
+            self.mount_snapshot(vol)
             self.post_mount(vol)
 
         self.post_mounts(volumes)
 
         return volumes
 
-    def mount_volume(self, ebs_volume):
+    def mount_snapshot(self, ebs_volume):
         '''
         Goes through the steps needed to mount the specified volume
         - checks if we have a snapshot
