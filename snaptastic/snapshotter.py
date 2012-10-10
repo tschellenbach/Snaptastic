@@ -207,7 +207,6 @@ class Snapshotter(object):
         # attaching a volume to our instance
         message_format = 'Attaching volume %s to instance %s'
         logger.info(message_format, boto_volume.id, self.instance_id)
-        import pdb; pdb.set_trace()
         self.con.attach_volume(
             boto_volume.id, self.instance_id, ebs_volume.device)
         
