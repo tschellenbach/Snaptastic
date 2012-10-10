@@ -1,4 +1,4 @@
-from snaptastic import Snapshotter, EBSVolume, register
+from snaptastic import Snapshotter, EBSVolume
 
 
 class TestSnapshotter(Snapshotter):

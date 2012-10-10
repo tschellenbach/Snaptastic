@@ -14,6 +14,7 @@ setup_install = 'setup.py' in sys.argv and 'install' in sys.argv
 
 if not setup_install:
     from snaptastic.utils import get_ec2_conn
+    from snaptastic.metaclass import get_snapshotter
     from snapshotter import Snapshotter
     from ebs_volume import EBSVolume
     from snaptastic import settings
@@ -22,23 +23,10 @@ if not setup_install:
     import logging.config
     logging.config.dictConfig(settings.LOGGING_CONFIG)
 
-#dict where all snapshotters get registered
-snapshotters = {}
 
 
-def register(snapshotter):
-    '''
-    Register your snapshotter
-    '''
-    snapshotters[snapshotter.name] = snapshotter
 
 
-def get_snapshotter(snapshotter_name):
-    error_format = 'No Snapshotter %s defined, registered Snapshotters are %s'
-    if not snapshotter_name in snapshotters:
-        raise ValueError(
-            error_format % (snapshotter_name, snapshotters.keys()))
-    return snapshotters[snapshotter_name]
 
 
 if not setup_install:
