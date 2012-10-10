@@ -196,12 +196,19 @@ class Snapshotter(object):
         
         logger.info('Starting to poll till volume is fully attached')
         # drink some coffee and wait
-        while boto_volume.update() != 'in-use':
+        waited = 0
+        MAX_ATTACHMENT_WAIT = 45
+        while boto_volume.update() != 'in-use' and waited < MAX_ATTACHMENT_WAIT:
             logger.info('Waiting for volume attachment: %s' % boto_volume.id)
             sleep(1)
-        while not os.path.exists(ebs_volume.instance_device):
+            waited += 1
+        while not os.path.exists(ebs_volume.instance_device) and waited < MAX_ATTACHMENT_WAIT:
             logger.info('Waiting for device: %s' % ebs_volume.instance_device)
             sleep(1)
+            waited += 1
+        
+        if waited == MAX_ATTACHMENT_WAIT:
+            raise exceptions.AttachmentException('Device didnt attach within % seconds', MAX_ATTACHMENT_WAIT)
 
         return boto_volume
 

@@ -35,5 +35,9 @@ class FormatException(SnaptasticException):
     pass
 
 
+class AttachmentException(SnaptasticException):
+    pass
+
+
 class DeviceAlreadyExists(SnaptasticException):
     pass
