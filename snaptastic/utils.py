@@ -1,3 +1,4 @@
+import os
 
 
 def add_tags(object_, tags):
@@ -19,3 +20,8 @@ def get_ec2_conn():
                                      aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                                      aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
     return ec2_conn
+
+
+def is_root_dev(mount_point):
+    is_root_dev = os.stat('/').st_dev == os.stat(mount_point).st_dev
+    return is_root_dev

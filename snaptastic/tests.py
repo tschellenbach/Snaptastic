@@ -35,22 +35,24 @@ class BaseTest(unittest2.TestCase):
 class TestFreeze(unittest2.TestCase):
     def test_freeze(self):
         with mock.patch('subprocess.check_output') as check:
-            with freeze('/mnt/test/'):
-                check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'],
-                                         stderr=subprocess.STDOUT)
-            check.assert_called_with(
-                ['xfs_freeze', '-u', '/mnt/test/'], stderr=-2)
+            with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
+                with freeze('/mnt/test/'):
+                    check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'],
+                                             stderr=subprocess.STDOUT)
+                check.assert_called_with(
+                    ['xfs_freeze', '-u', '/mnt/test/'], stderr=-2)
 
     def test_freeze_fail(self):
         with mock.patch('subprocess.check_output') as check:
-            try:
-                with freeze('/mnt/test/'):
-                    check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'], stderr=subprocess.STDOUT)
-                    raise Exception('test')
-            except:
-                pass
-            check.assert_called_with(
-                ['xfs_freeze', '-u', '/mnt/test/'], stderr=subprocess.STDOUT)
+            with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
+                try:
+                    with freeze('/mnt/test/'):
+                        check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'], stderr=subprocess.STDOUT)
+                        raise Exception('test')
+                except:
+                    pass
+                check.assert_called_with(
+                    ['xfs_freeze', '-u', '/mnt/test/'], stderr=subprocess.STDOUT)
 
 
 class TestCreateSnapshot(BaseTest):
@@ -58,17 +60,19 @@ class TestCreateSnapshot(BaseTest):
         snap = self.get_test_snapshotter()
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         with mock.patch('subprocess.check_output') as check:
-            snap.make_snapshots([volume])
-            self.assertEqual(check.call_count, 2)
-            check.assert_called_with(
-                ['xfs_freeze', '-u', '/mnt/test'], stderr=subprocess.STDOUT)
+            with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
+                snap.make_snapshots([volume])
+                self.assertEqual(check.call_count, 2)
+                check.assert_called_with(
+                    ['xfs_freeze', '-u', '/mnt/test'], stderr=subprocess.STDOUT)
 
     def test_make_snapshot(self):
         snap = self.get_test_snapshotter()
         con = snap.con
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         with mock.patch('subprocess.check_output'):
-            snap.make_snapshot(volume)
+            with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
+                snap.make_snapshot(volume)
         args, kwargs = con.create_snapshot.call_args
         description = kwargs['description']
         self.assertEqual(description, 'snapshot-role-test-cluster-/mnt/test')
