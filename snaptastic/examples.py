@@ -8,7 +8,7 @@ class TestSnapshotter(Snapshotter):
         '''
         Get the volumes for this instance, customize this at will
         '''
-        volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
+        volume = EBSVolume(device='/dev/sdf6', mount_point='/mnt/test', size=5)
         volumes = [volume]
         return volumes
 
