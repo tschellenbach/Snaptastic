@@ -13,8 +13,6 @@ class TestSnapshotter(Snapshotter):
         volumes = [volume]
         return volumes
 
-register(TestSnapshotter)
-
 
 class SOLRSnapshotter(Snapshotter):
     name = 'solr'
@@ -23,8 +21,6 @@ class SOLRSnapshotter(Snapshotter):
         volume = EBSVolume('/dev/sdf1', '/mnt/index', size=200)
         volumes = [volume]
         return volumes
-
-register(SOLRSnapshotter)
 
 
 class PostgreSQLSnapshotter(Snapshotter):
@@ -79,6 +75,3 @@ class PostgreSQLSnapshotter(Snapshotter):
         subprocess.check_output(['chmod', '-R', '0700', '/var/lib/postgresql'])
         subprocess.check_output(
             ['chown', '-R', 'postgres:postgres', '/var/lib/postgresql'])
-
-
-register(PostgreSQLSnapshotter)

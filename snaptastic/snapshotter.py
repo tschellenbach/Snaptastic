@@ -2,6 +2,7 @@ from boto.utils import get_instance_metadata
 from datetime import timedelta, datetime
 from snaptastic import exceptions, get_ec2_conn
 from snaptastic.ebs_volume import EBSVolume
+from snaptastic.metaclass import SnapshotterRegisteringMetaClass
 from snaptastic.utils import get_userdata_dict, add_tags
 from time import sleep
 from xfs_freeze import freeze
@@ -28,6 +29,8 @@ class Snapshotter(object):
     - pre_snapshots, post_snapshots
     '''
     SNAPSHOT_EXPIRY_DAYS = 7
+    
+    __metaclass__ = SnapshotterRegisteringMetaClass
 
     def __init__(self, userdata=None, metadata=None, connection=None, bdm=None):
         '''
