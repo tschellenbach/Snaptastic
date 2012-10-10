@@ -18,6 +18,10 @@ class EBSVolume(object):
         self.size = size
         self.mount_point = mount_point
 
+    def __repr__(self):
+        return 'EBSVolume on %s from %s(%s)' % (self.mount_point, self.device, self.size)
+            
+
     @property
     def instance_device(self):
         '''
