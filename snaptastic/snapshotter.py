@@ -193,9 +193,9 @@ class Snapshotter(object):
         while not os.path.exists(ebs_volume.instance_device):
             logging.info('Waiting for device: %s' % ebs_volume.instance_device)
             sleep(1)
-            
+
         return boto_volume
-    
+
     def get_bdm(self):
         bdm = self.con.get_instance_attribute(
             self.instance_id, 'blockDeviceMapping')
