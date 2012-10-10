@@ -188,11 +188,12 @@ class Snapshotter(object):
         Attaches the given boto_volume class to the running instance
         '''
         # attaching a volume to our instance
-        logging.info('Attaching volume %s to instance %s' % (
-            boto_volume.id, self.instance_id))
+        message_format = 'Attaching volume %s to instance %s'
+        logging.info(message_format, boto_volume.id, self.instance_id)
         self.con.attach_volume(
             boto_volume.id, self.instance_id, ebs_volume.device)
-
+        
+        logging.info('Starting to poll till volume is fully attached')
         # drink some coffee and wait
         while boto_volume.update() != 'in-use':
             logging.info('Waiting for volume attachment: %s' % boto_volume.id)
