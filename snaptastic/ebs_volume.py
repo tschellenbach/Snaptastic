@@ -14,10 +14,11 @@ class EBSVolume(object):
     UNMOUNT_CMD = 'unmount %(device)s'
     FORMAT_CMD = 'mkfs.xfs %(device)s'
 
-    def __init__(self, device, size, mount_point=None):
+    def __init__(self, device, size, mount_point=None, delete_on_termination=True):
         self.device = device
         self.size = size
         self.mount_point = mount_point
+        self.delete_on_termination = delete_on_termination
 
     def __repr__(self):
         return 'EBSVolume on %s from %s(%s GB)' % (self.mount_point, self.device, self.size)
