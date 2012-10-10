@@ -168,6 +168,8 @@ class Snapshotter(object):
 
         # we always create a new volume when mounting upon boot
         # load from a snapshot if we have one
+        log_message = 'Creating a volume of size %s in zone %s from snapshot %s'
+        logger.info(log_message, vol.size, self.availability_zone, snapshot_id)
         boto_volume = self.con.create_volume(size=vol.size,
                                              zone=self.availability_zone,
                                              snapshot=snapshot_id
@@ -175,6 +177,7 @@ class Snapshotter(object):
         # tag the volume
         tags = self.get_expiration_tags()
         tags['mount-point'] = vol.mount_point
+        logger.info('tagging volume %s with tags %s', boto_volume.id, tags)
         add_tags(boto_volume, tags)
 
         return boto_volume
