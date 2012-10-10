@@ -267,14 +267,14 @@ class Snapshotter(object):
             are created, so we can just return the last element of the list.
         """
         all_snapshots = self.get_cached_snapshots()
-        all_snapshots.sort(key=lambda s: s.created, reverse=True)
+        all_snapshots.sort(key=lambda s: s.start_time, reverse=True)
         volume_snapshots = [s for s in all_snapshots if s.tags.get(
             'mount_point') == vol.mount_point]
         try:
-            snapshot = volume_snapshots[-1]
+            latest_snapshot = volume_snapshots[0]
         except IndexError, e:
             raise exceptions.MissingSnapshot(e.message)
-        return snapshot
+        return latest_snapshot
 
     SNAPSHOT_NAME_FORMAT = "snapshot-%(role)s-%(environment)s-%(cluster)s-%(mount_point)s"
 
