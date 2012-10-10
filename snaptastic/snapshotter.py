@@ -274,7 +274,7 @@ class Snapshotter(object):
 
     @property
     def instance_id(self):
-        instance_id = self.metadata['placement']['instance_id']
+        instance_id = self.metadata['instance-id']
         return instance_id
 
     @property
