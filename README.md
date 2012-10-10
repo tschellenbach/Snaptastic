@@ -1,5 +1,5 @@
 ############################################################################################################################################
-Snaptastic by Mike Ryan & Thierry Schellenbach (`mellowmorning.com <http://www.mellowmorning.com/>`_)
+Snaptastic by Mike Ryan & Thierry Schellenbach [mellowmorning.com](http://www.mellowmorning.com/)
 ############################################################################################################################################
 
 About the Author
