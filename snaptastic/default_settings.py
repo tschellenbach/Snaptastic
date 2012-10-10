@@ -1,7 +1,10 @@
 
 import os
+import sys
 error_log_path = os.path.join('/var', 'log', 'snaptastic', 'error.log')
 log_path = os.path.join('/var', 'log', 'snaptastic', 'info.log')
+
+test_running = 'python -m unittest' in sys.argv
 
 
 def ensure_dir(path):
@@ -9,8 +12,10 @@ def ensure_dir(path):
     if not os.path.isdir(path_dir):
         os.makedirs(path_dir)
 
+
 ensure_dir(error_log_path)
 ensure_dir(log_path)
+
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -45,6 +50,9 @@ LOGGING_CONFIG = {
         },
     }
 }
+
+if test_running:
+    LOGGING_CONFIG['loggers']['snaptastic']['handlers'] = ['default']
 
 import logging.config
 logging.config.dictConfig(LOGGING_CONFIG)

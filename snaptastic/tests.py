@@ -26,7 +26,7 @@ class BaseTest(unittest2.TestCase):
         metadata = dict(placement=placement)
         mapping = dict()
         bdm = dict()
-        mapping['/dev/xvdf'] = mock.Mock()
+        mapping['/dev/sdf'] = mock.Mock()
         bdm['blockDeviceMapping'] = mapping
         snap = Snapshotter(userdata, metadata, con, bdm)
         return snap
@@ -81,13 +81,13 @@ class TestCreateSnapshot(BaseTest):
 
 
 class TestMounting(BaseTest):
-    def test_mount_volumes(self):
+    def test_mount_snapshots(self):
         snap = self.get_test_snapshotter()
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         snap.get_snapshot = mock.Mock(return_value='1234')
         snap.attach_volume = mock.Mock()
         with mock.patch('subprocess.check_output'):
-            mounted = snap.mount_volumes([volume])
+            mounted = snap.mount_snapshots([volume])
 
 
 if __name__ == '__main__':
