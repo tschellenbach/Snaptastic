@@ -31,6 +31,10 @@ class MountException(SnaptasticException):
     pass
 
 
+class UnmountException(SnaptasticException):
+    pass
+
+
 class FormatException(SnaptasticException):
     pass
 
