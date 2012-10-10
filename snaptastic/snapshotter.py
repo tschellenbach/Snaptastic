@@ -88,7 +88,7 @@ class Snapshotter(object):
     def make_snapshot(self, vol):
         #get a snapshot name
         snapshot_name = self.get_snapshot_name(vol)
-        logger.info('creating a snapshot with name %s', snapshot_name)
+        logger.info('preparing to create a snapshot with name %s', snapshot_name)
         # find the volume ID for this device
         volume_id = self.get_volume_id(vol)
         #get the tags, note that these are used for finding the right snapshot
@@ -96,9 +96,12 @@ class Snapshotter(object):
         tags['mount_point'] = vol.mount_point
         #Don't freeze more than we need to
         with freeze(vol.mount_point):
+            logger.info('creating snapshot')
             snapshot = self.con.create_snapshot(
                 volume_id, description=snapshot_name)
+            logger.info('succesfully created snapshot with id %s', snapshot.id)
         #Add tags
+        logger.info('tagging snapshot %s with tags %s', snapshot.id, tags)
         add_tags(snapshot, tags)
         return snapshot
 
@@ -237,11 +240,10 @@ class Snapshotter(object):
 
     def get_volume_id(self, vol):
         bdm_mapping = self.bdm['blockDeviceMapping']
-        instance_device = vol.instance_device
         try:
-            volume_id = bdm_mapping[instance_device].volume_id
+            volume_id = bdm_mapping[vol.device].volume_id
         except KeyError:
-            msg = '%s not found in block device mapping' % instance_device
+            msg = '%s not found in block device mapping %s' % (vol.device, bdm_mapping)
             raise exceptions.MissingVolume(msg)
         return volume_id
 
