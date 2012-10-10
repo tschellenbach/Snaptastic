@@ -138,6 +138,9 @@ class Snapshotter(object):
         boto_volume = self.create_volume(ebs_volume, snapshot_id=snapshot_id)
         #attach the volume to the instance
         self.attach_volume(ebs_volume, boto_volume)
+        # if it's not from a snapshot we need to format
+        if snapshot_id is None:
+            ebs_volume.format()
 
         #mount the volume
         ebs_volume.mount()
@@ -166,10 +169,6 @@ class Snapshotter(object):
                                              zone=self.availability_zone,
                                              snapshot=snapshot_id
                                              )
-        # if it's not from a snapshot we need to format
-        if snapshot_id is None:
-            vol.format()
-
         # tag the volume
         tags = self.get_expiration_tags()
         tags['mount-point'] = vol.mount_point
@@ -194,9 +193,9 @@ class Snapshotter(object):
         while not os.path.exists(ebs_volume.instance_device):
             logging.info('Waiting for device: %s' % ebs_volume.instance_device)
             sleep(1)
-
+            
         return boto_volume
-
+    
     def get_bdm(self):
         bdm = self.con.get_instance_attribute(
             self.instance_id, 'blockDeviceMapping')
