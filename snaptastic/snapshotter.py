@@ -151,7 +151,10 @@ class Snapshotter(object):
         #mount the volume
         ebs_volume.mount()
         
-    def unmount_snapshots(self, volumes):
+    def unmount_snapshots(self, volumes=None):
+        '''
+        Unmounting the volumes, mainly for testing
+        '''
         volumes = volumes or self.get_volumes()
         logger.info('unmounting volumes %s', volumes)
         for vol in volumes:
