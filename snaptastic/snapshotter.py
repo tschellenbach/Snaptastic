@@ -151,9 +151,9 @@ class Snapshotter(object):
         #mount the volume
         ebs_volume.mount()
         
-    def unmount_snapshots(self, volumes):
+    def unmount_snapshots(self, volumes=None):
         '''
-        Unmounts all the snapshots on the given volumes
+        Unmounting the volumes, mainly for testing
         '''
         volumes = volumes or self.get_volumes()
         logger.info('unmounting volumes %s', volumes)
@@ -207,7 +207,6 @@ class Snapshotter(object):
         # attaching a volume to our instance
         message_format = 'Attaching volume %s to instance %s'
         logger.info(message_format, boto_volume.id, self.instance_id)
-        import pdb; pdb.set_trace()
         self.con.attach_volume(
             boto_volume.id, self.instance_id, ebs_volume.device)
         
