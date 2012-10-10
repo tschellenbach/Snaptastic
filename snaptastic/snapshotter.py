@@ -130,7 +130,10 @@ class Snapshotter(object):
         :type ebs_volume: EBSVolume
         '''
         #see if we have a snapshot we can start from
-        snapshot_id = self.get_snapshot(ebs_volume)
+        try:
+            snapshot_id = self.get_snapshot(ebs_volume)
+        except exceptions.MissingSnapshot, e:
+            snapshot_id = None
         logger.info('mounting a volume to %s with snapshot %s',
                     ebs_volume.mount_point, snapshot_id)
 
