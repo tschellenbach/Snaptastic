@@ -58,7 +58,7 @@ def test(verbosity=2):
     except Exception, e:
         logger.exception('Metadata lookup doesnt work, error %s', e)
 
-        
+
 def main():
     pass
 
