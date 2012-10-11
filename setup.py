@@ -49,4 +49,9 @@ setup(
     test_suite='snaptastic.tests',
     include_package_data=True,
     classifiers=CLASSIFIERS,
+    entry_points={
+        'console_scripts': [
+            'snaptastic = snaptastic.cli:main',
+        ]
+    },
 )

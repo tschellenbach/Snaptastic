@@ -13,15 +13,15 @@ Thierry Schellenbach, Founder/ CTO at Fashiolista
 Command line usage
 
 start by validating if we can access boto and instance metadata
-python snap.py test
+snaptastic test
 
 roundtrip flow
-python snap.py mount-snapshots solr
+snaptastic mount-snapshots solr
 touch /mnt/test/helloworld.txt
-python snap.py make-snapshots solr
-python snap.py unmount-snapshots solr
+snaptastic make-snapshots solr
+snaptastic unmount-snapshots solr
 df to verify its gone
-python snap.py mount-snapshots solr
+snaptastic mount-snapshots solr
 
 
 
