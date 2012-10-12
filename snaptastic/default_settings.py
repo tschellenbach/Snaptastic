@@ -62,4 +62,6 @@ if test_running:
 #backport for dictconfig if we are running on 2.6
 from snaptastic.utils import log
 from snaptastic.utils.log import dictConfig
+#backport check_output to support 2.6
+from snaptastic.utils import subprocess
 dictConfig(LOGGING_CONFIG)
