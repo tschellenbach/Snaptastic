@@ -1,3 +1,4 @@
 include LICENSE.txt
 include MANIFEST.in
-include README.rest
+include README.md
+include AUTHORS
