@@ -20,8 +20,8 @@ install_requires = [
     'argparse'
 ]
 
-license_text = open('LICENSE.txt').read()
-long_description = open('README.md').read()
+license_text = open('license.txt').read()
+long_description = open('readme.md').read()
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
