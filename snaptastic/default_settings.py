@@ -7,6 +7,9 @@ log_path = os.path.join('/var', 'log', 'snaptastic', 'info.log')
 test_running = 'python -m unittest' in sys.argv
 
 
+from snaptastic.utils import log
+
+
 def ensure_dir(path):
     path_dir, filename = os.path.split(path)
     if not os.path.isdir(path_dir):
@@ -51,8 +54,11 @@ LOGGING_CONFIG = {
     }
 }
 
+
 if test_running:
     LOGGING_CONFIG['loggers']['snaptastic']['handlers'] = ['default']
 
+
+#backport for dictconfig if we are running on 2.6
 import logging.config
 logging.config.dictConfig(LOGGING_CONFIG)
