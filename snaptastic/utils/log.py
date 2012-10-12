@@ -19,7 +19,6 @@ except ImportError:
     from snaptastic.utils.dictconfig import dictConfig
 
 
-
 if sys.version_info < (2, 5):
     class LoggerCompat(object):
         def __init__(self, logger):
@@ -48,4 +47,3 @@ else:
 logger = getLogger('django')
 if not logger.handlers:
     logger.addHandler(NullHandler())
-

@@ -31,3 +31,4 @@ def validate():
 def clean():
     local('bash -c "autopep8 -i *.py"')
     local('bash -c "autopep8 -i snaptastic/*.py"')
+    local('bash -c "autopep8 -i snaptastic/utils/*.py"')
