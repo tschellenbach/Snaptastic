@@ -174,7 +174,7 @@ class Snapshotter(object):
                 volume_id = self.get_volume_id(vol)
                 self.detach_volume(volume_id)
             except Exception, e:
-                logger.warn(e)                
+                logger.warn(e)
         return volumes
 
     '''
