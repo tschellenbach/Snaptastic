@@ -56,6 +56,12 @@ Features
 * Batches boto API calls for faster batch volume mounting/snapshotting
 * Tested codebase
 
+Porting old systems
+
+You will often need to fake userdata for porting old systems.
+Doing so is quite easy:
+
+sudo snaptastic make-snapshots solr --userdata='{"role": "solr", "cluster": "solr", "environment": "aws"}'
 
 Todo
 
