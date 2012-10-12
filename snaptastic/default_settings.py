@@ -61,5 +61,5 @@ if test_running:
 
 #backport for dictconfig if we are running on 2.6
 from snaptastic.utils import log
-import logging.config
-logging.config.dictConfig(LOGGING_CONFIG)
+from snaptastic.utils.log import dictConfig
+dictConfig(LOGGING_CONFIG)

@@ -20,8 +20,8 @@ if not setup_install:
     from snaptastic import settings
 
     #setup logging
-    import logging.config
-    logging.config.dictConfig(settings.LOGGING_CONFIG)
+    from snaptastic.utils.log import dictConfig
+    dictConfig(settings.LOGGING_CONFIG)
 
 
 if not setup_install:

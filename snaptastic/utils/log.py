@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 # Make sure a NullHandler is available
 # This was added in Python 2.7/3.2
 try:
@@ -16,6 +17,8 @@ try:
     from logging.config import dictConfig
 except ImportError:
     from snaptastic.utils.dictconfig import dictConfig
+
+
 
 if sys.version_info < (2, 5):
     class LoggerCompat(object):
