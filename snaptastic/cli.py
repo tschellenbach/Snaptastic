@@ -9,33 +9,39 @@ sys.path.append(parent)
 
 from argh import command, ArghParser
 from snaptastic import get_snapshotter
+import json
+
+
+def configure_snapshotter(snapshotter_name, userdata=None):
+    snapshotter_class = get_snapshotter(snapshotter_name)
+    if userdata:
+        userdata = json.loads(userdata)
+    snap = snapshotter_class(userdata=userdata)
+    return snap
 
 
 @command
-def make_snapshots(snapshotter_name, verbosity=2):
-    snapshotter_class = get_snapshotter(snapshotter_name)
-    snap = snapshotter_class()
+def make_snapshots(snapshotter_name, userdata=None, verbosity=2):
+    snap = configure_snapshotter(snapshotter_name, userdata)
+    
     snap.make_snapshots()
 
 
 @command
-def mount_snapshots(snapshotter_name, verbosity=2):
-    snapshotter_class = get_snapshotter(snapshotter_name)
-    snap = snapshotter_class()
+def mount_snapshots(snapshotter_name, userdata=None, verbosity=2):
+    snap = configure_snapshotter(snapshotter_name, userdata)
     snap.mount_snapshots()
 
 
 @command
-def unmount_snapshots(snapshotter_name, verbosity=2):
-    snapshotter_class = get_snapshotter(snapshotter_name)
-    snap = snapshotter_class()
+def unmount_snapshots(snapshotter_name, userdata=None, verbosity=2):
+    snap = configure_snapshotter(snapshotter_name, userdata)
     snap.unmount_snapshots()
 
 
 @command
-def list_volumes(snapshotter_name, verbosity=2):
-    snapshotter_class = get_snapshotter(snapshotter_name)
-    snap = snapshotter_class()
+def list_volumes(snapshotter_name, userdata=None, verbosity=2):
+    snap = configure_snapshotter(snapshotter_name, userdata)
     volumes = snap.get_volumes()
     for volume in volumes:
         print volume
