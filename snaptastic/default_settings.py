@@ -13,7 +13,6 @@ def ensure_dir(path):
         os.makedirs(path_dir)
 
 
-
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
