@@ -354,3 +354,23 @@ class Snapshotter(object):
 
     def post_snapshot(self, vol):
         pass
+    
+    
+class UserdataSnapshotter(Snapshotter):
+    '''
+    Looks for a list of volumes in the instance's userdata
+    [{
+       "device": "/dev/sdf1",
+       "mount_point": "/var/lib/postgresql/9.1/main",
+       "size": 200
+    }]
+    '''
+    name = 'userdata_example'
+
+    def get_volumes(self):
+        volume_dicts = self.userdata['volumes']
+        volumes = []
+        for volume_dict in volume_dicts:
+            volume = EBSVolume(**volume_dict)
+            volumes.append(volume)
+        return volumes

@@ -15,7 +15,7 @@ class TestSnapshotter(Snapshotter):
 
 
 class SOLRSnapshotter(Snapshotter):
-    name = 'solr'
+    name = 'solr_example'
 
     def get_volumes(self):
         volume = EBSVolume('/dev/sdf1', '/mnt/index', size=200)
@@ -27,7 +27,7 @@ class PostgreSQLSnapshotter(Snapshotter):
     '''
     Customized mounting hooks for postgres
     '''
-    name = 'postgres'
+    name = 'postgres_example'
 
     def get_volumes(self):
         volume_dicts = [
