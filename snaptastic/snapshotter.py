@@ -169,9 +169,9 @@ class Snapshotter(object):
                 vol.unmount()
             except exceptions.UnmountException, e:
                 logger.warn(e)
-            #now detach
-            volume_id = self.get_volume_id(vol)
             try:
+                #now detach
+                volume_id = self.get_volume_id(vol)
                 self.detach_volume(volume_id)
             except Exception, e:
                 logger.warn(e)                
