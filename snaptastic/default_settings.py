@@ -4,7 +4,7 @@ import sys
 error_log_path = os.path.join('/var', 'log', 'snaptastic', 'error.log')
 log_path = os.path.join('/var', 'log', 'snaptastic', 'info.log')
 
-test_running = 'python -m unittest' in sys.argv
+travis = os.environ.get('TRAVIS') is not None
 
 
 def ensure_dir(path):
@@ -48,7 +48,8 @@ LOGGING_CONFIG = {
 }
 
 
-if test_running:
+if travis:
+    #dont have a filesystem available, skip the nice logging
     LOGGING_CONFIG['loggers']['snaptastic']['handlers'] = ['default']
 else:
     ensure_dir(error_log_path)
