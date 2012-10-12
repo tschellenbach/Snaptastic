@@ -13,9 +13,6 @@ def ensure_dir(path):
         os.makedirs(path_dir)
 
 
-ensure_dir(error_log_path)
-ensure_dir(log_path)
-
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -54,6 +51,9 @@ LOGGING_CONFIG = {
 
 if test_running:
     LOGGING_CONFIG['loggers']['snaptastic']['handlers'] = ['default']
+else:
+    ensure_dir(error_log_path)
+    ensure_dir(log_path)
 
 
 #backport for dictconfig if we are running on 2.6
