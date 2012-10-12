@@ -165,10 +165,16 @@ class Snapshotter(object):
         logger.info('unmounting volumes %s', volumes)
         for vol in volumes:
             #first unmount
-            vol.unmount()
+            try:
+                vol.unmount()
+            except exceptions.UnmountException, e:
+                logger.warn(e)
             #now detach
             volume_id = self.get_volume_id(vol)
-            self.detach_volume(volume_id)
+            try:
+                self.detach_volume(volume_id)
+            except Exception, e:
+                logger.warn(e)                
         return volumes
 
     '''
