@@ -7,9 +7,6 @@ log_path = os.path.join('/var', 'log', 'snaptastic', 'info.log')
 test_running = 'python -m unittest' in sys.argv
 
 
-
-
-
 def ensure_dir(path):
     path_dir, filename = os.path.split(path)
     if not os.path.isdir(path_dir):

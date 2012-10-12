@@ -354,8 +354,8 @@ class Snapshotter(object):
 
     def post_snapshot(self, vol):
         pass
-    
-    
+
+
 class UserdataSnapshotter(Snapshotter):
     '''
     Looks for a list of volumes in the instance's userdata
