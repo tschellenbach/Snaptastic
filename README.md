@@ -10,8 +10,6 @@ Thierry Schellenbach, Founder/ CTO at Fashiolista
 
 ![Travis CI](https://secure.travis-ci.org/tschellenbach/Snaptastic.png?branch=master "Travis CI")
 
-.. image:: 
-
 Command line usage
 
 start by validating if we can access boto and instance metadata
