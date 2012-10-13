@@ -8,7 +8,9 @@ About the Author
 Mike Ryan, Syadmin at Fashiolista, author of ...
 Thierry Schellenbach, Founder/ CTO at Fashiolista
 
-.. image:: https://secure.travis-ci.org/tschellenbach/Snaptastic.png?branch=master
+![Travis CI](https://secure.travis-ci.org/tschellenbach/Snaptastic.png?branch=master "Travis CI")
+
+.. image:: 
 
 Command line usage
 
