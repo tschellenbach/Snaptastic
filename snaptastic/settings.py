@@ -20,7 +20,7 @@ except ImportError, e:
     for settings_file in setting_files:
         logger.info('trying settings file %s', settings_file)
         if os.path.isfile(settings_file):
-            
+
             snaptastic_settings = imp.load_source(
                 'snaptastic_settings', settings_file)
             module_variables = [k for k in dir(
