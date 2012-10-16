@@ -31,12 +31,46 @@ def is_root_dev(mount_point):
     return is_root_dev
 
 
-def try_dict_config(dict_config):
+def setup_file_logging(LOGGING_CONFIG):
+    '''
+    Try to log to
+    /var/log/snaptastic/error.log
+    /var/log/snaptastic/info.log
+
+    If that doesn't work fallback to stream logging
+    '''
+    from copy import copy
+    LOGGING_CONFIG = copy(LOGGING_CONFIG)
     from snaptastic.utils.log import dictConfig
     try:
-        dictConfig(dict_config)
-    except ValueError, e:
-        #if we have not file system
-        dict_config['loggers']['snaptastic']['handlers'] = ['default']
-        dictConfig(dict_config)
-        logger.warn('Couldnt write logs to files, got error %s', e)
+        error_log_path = os.path.join('/var', 'log', 'snaptastic', 'error.log')
+        log_path = os.path.join('/var', 'log', 'snaptastic', 'info.log')
+
+        def ensure_dir(path):
+            path_dir, filename = os.path.split(path)
+            if not os.path.isdir(path_dir):
+                os.makedirs(path_dir)
+
+        ensure_dir(error_log_path)
+        ensure_dir(log_path)
+
+        FILE_HANDLERS = {
+            'error_file': {
+                'level': 'ERROR',
+                'class': 'logging.FileHandler',
+                'filename': error_log_path
+            },
+            'file': {
+                'level': 'INFO',
+                'class': 'logging.FileHandler',
+                'filename': log_path
+            }
+        }
+        LOGGING_CONFIG['handlers'].update(FILE_HANDLERS)
+        LOGGING_CONFIG['loggers']['snaptastic']['handlers'] = [
+            'default', 'file', 'error_file']
+        dictConfig(LOGGING_CONFIG)
+    except (ValueError, IOError), e:
+        logger.warn('WARNING couldnt write log to files, got error %s', e)
+        dictConfig(LOGGING_CONFIG)
+    return LOGGING_CONFIG
