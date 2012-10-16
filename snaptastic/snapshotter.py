@@ -250,6 +250,7 @@ class Snapshotter(object):
             logger.info('Waiting for device to detach: %s' %
                         ebs_volume.instance_device)
             detached = self.con.detach_volume(volume_id)
+            sleep(1)
             waited += 1
 
         if waited == MAX_DETACHMENT_WAIT:
