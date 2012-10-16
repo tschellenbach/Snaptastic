@@ -34,8 +34,10 @@ def mount_snapshots(snapshotter_name, userdata=None, verbosity=2):
 
 @command
 def unmount_snapshots(snapshotter_name, userdata=None, verbosity=2):
-    snap = configure_snapshotter(snapshotter_name, userdata)
-    snap.unmount_snapshots()
+    unmount = raw_input("Are you sure you want to unmount?")
+    if unmount in ['y', 'yeay', 'yes']:
+        snap = configure_snapshotter(snapshotter_name, userdata)
+        snap.unmount_snapshots()
 
 
 @command
@@ -44,6 +46,15 @@ def list_volumes(snapshotter_name, userdata=None, verbosity=2):
     volumes = snap.get_volumes()
     for volume in volumes:
         print volume
+        
+
+@command
+def clean(component, userdata=None, verbosity=2):
+    from snaptastic.cleaner import Cleaner
+    clean = raw_input("Are you sure you want to clean?(y,yeay,yes): ")
+    if clean in ['y', 'yeay', 'yes']:
+        cleaner = Cleaner()
+        cleaner.clean(component)
 
 
 @command
@@ -74,6 +85,6 @@ if '--version' in sys.argv:
 
 p = ArghParser()
 commands = [make_snapshots, mount_snapshots,
-            list_volumes, unmount_snapshots, test]
+            list_volumes, unmount_snapshots, clean, test]
 p.add_commands(commands)
 p.dispatch()
