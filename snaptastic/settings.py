@@ -2,6 +2,10 @@ from snaptastic import exceptions
 from snaptastic.default_settings import *
 import imp
 import logging
+import code
+import traceback
+import signal
+
 
 logger = logging.getLogger(__name__)
 
@@ -33,3 +37,20 @@ except ImportError, e:
     else:
         raise exceptions.SettingException(
             'Couldnt locate settings file in sys.path or %s', setting_files)
+
+
+def debug(sig, frame):
+    """Interrupt running process, and provide a python prompt for
+    interactive debugging."""
+    # Allow access to frame object.
+    d = {'_frame': frame}
+    # Unless shadowed by global
+    d.update(frame.f_globals)
+    d.update(frame.f_locals)
+
+    i = code.InteractiveConsole(d)
+    message = "Signal recieved : entering python shell.\nTraceback:\n"
+    message += ''.join(traceback.format_stack(frame))
+    i.interact(message)
+
+signal.signal(signal.SIGUSR1, debug)
