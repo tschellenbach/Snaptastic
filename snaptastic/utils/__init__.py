@@ -72,7 +72,7 @@ def setup_file_logging(LOGGING_CONFIG):
             'default', 'file', 'error_file']
         dictConfig(FILE_LOGGING_CONFIG)
         LOGGING_CONFIG = FILE_LOGGING_CONFIG
-    except (ValueError, IOError), e:
+    except (ValueError, IOError, OSError), e:
         logger.warn('WARNING couldnt write log to files, got error %s', e)
         dictConfig(LOGGING_CONFIG)
     return LOGGING_CONFIG
