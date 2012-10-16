@@ -6,8 +6,6 @@ import sys
 
 
 logger = logging.getLogger(__name__)
-installing = 'install' in sys.argv
-print 'sysarb', sys.argv
 
 setting_files = [
     os.path.join('/etc', 'snaptastic_settings.py'),
@@ -39,5 +37,4 @@ except ImportError, e:
     else:
         error_format = 'Couldnt locate settings file in sys.path or %s'
         error_message = error_format % setting_files
-        if installing:
-            logger.warn(error_message)
+        logger.warn(error_message)
