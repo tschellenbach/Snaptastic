@@ -2,10 +2,11 @@ from snaptastic import exceptions
 from snaptastic.default_settings import *
 import imp
 import logging
+import sys
 
 
 logger = logging.getLogger(__name__)
-
+installing = 'install' in sys.argv
 
 setting_files = [
     os.path.join('/etc', 'snaptastic_settings.py'),
@@ -32,5 +33,9 @@ except ImportError, e:
             logger.info('found settings file at %s', settings_file)
             break
     else:
-        raise exceptions.SettingException(
-            'Couldnt locate settings file in sys.path or %s', setting_files)
+        error_format = 'Couldnt locate settings file in sys.path or %s'
+        error_message = error_format % setting_files
+        if installing:
+            logger.warn(error_message)
+        else:
+            raise exceptions.SettingException(error_message)
