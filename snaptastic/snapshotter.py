@@ -172,7 +172,7 @@ class Snapshotter(object):
             try:
                 #now detach
                 volume_id = self.get_volume_id(vol)
-                self.detach_volume(volume_id)
+                self.detach_volume(vol, volume_id)
             except Exception, e:
                 logger.warn(e)
         return volumes
@@ -242,9 +242,20 @@ class Snapshotter(object):
 
         return boto_volume
 
-    def detach_volume(self, volume_id):
+    def detach_volume(self, ebs_volume, volume_id):
+        MAX_DETACHMENT_WAIT = 45
+        waited = 0
         logger.info('now detaching %s', volume_id)
-        detached = self.con.detach_volume(volume_id)
+        while os.path.exists(ebs_volume.instance_device) and waited < MAX_DETACHMENT_WAIT:
+            logger.info('Waiting for device to detach: %s' % ebs_volume.instance_device)
+            detached = self.con.detach_volume(volume_id)
+            waited += 1
+            
+        if waited == MAX_DETACHMENT_WAIT:
+            error_format = 'Device didnt attach within % seconds'
+            raise exceptions.DetachmentException(
+                error_format, MAX_DETACHMENT_WAIT)
+            
         return detached
 
     def get_bdm(self):

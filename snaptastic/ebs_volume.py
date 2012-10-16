@@ -6,6 +6,14 @@ import subprocess
 logger = logging.getLogger(__name__)
 
 
+class FILESYSTEMS:
+    class XFS:
+        pass
+
+    class EXT4:
+        pass
+
+
 class EBSVolume(object):
     '''
     Small wrapper class for specifying your desired EBS volume setup
@@ -14,11 +22,12 @@ class EBSVolume(object):
     UNMOUNT_CMD = 'umount %(device)s'
     FORMAT_CMD = 'mkfs.xfs %(device)s'
 
-    def __init__(self, device, mount_point, size=10, delete_on_termination=True):
+    def __init__(self, device, mount_point, size=5, delete_on_termination=True, file_system=FILESYSTEMS.XFS):
         self.device = device
         self.size = size
         self.mount_point = mount_point
         self.delete_on_termination = delete_on_termination
+        self.file_system = file_system
 
     def __repr__(self):
         return 'EBSVolume on %s from %s(%s GB)' % (self.mount_point, self.device, self.size)
