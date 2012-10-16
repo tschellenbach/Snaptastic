@@ -46,7 +46,7 @@ def list_volumes(snapshotter_name, userdata=None, verbosity=2):
     volumes = snap.get_volumes()
     for volume in volumes:
         print volume
-        
+
 
 @command
 def clean(component, userdata=None, verbosity=2):
