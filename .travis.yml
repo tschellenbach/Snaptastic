@@ -17,6 +17,6 @@ before_script:
   - "pep8 --exclude=migrations --ignore=E501,E225 snaptastic"
   - pyflakes -x W snaptastic
 script:
-  - pip install -e .
+  - TRAVIS=yes pip install -e .
   - coverage run setup.py test
   - coverage report
