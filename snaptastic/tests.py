@@ -92,7 +92,8 @@ class TestMounting(BaseTest):
         snap.get_snapshot = mock.Mock(return_value='1234')
         snap.attach_volume = mock.Mock()
         with mock.patch('subprocess.check_output'):
-            mounted = snap.mount_snapshots([volume])
+            with mock.patch('os.makedirs'):
+                mounted = snap.mount_snapshots([volume])
 
 
 if __name__ == '__main__':
