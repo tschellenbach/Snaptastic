@@ -12,6 +12,8 @@ setting_files = [
     os.path.join('/etc', 'snaptastic', 'snaptastic_settings.py'),
 ]
 logger.info('trying snaptastic_settings in sys.path')
+
+
 SETTINGS_FILE = None
 try:
     import snaptastic_settings
