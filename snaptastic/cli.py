@@ -23,7 +23,6 @@ def configure_snapshotter(snapshotter_name, userdata=None):
 @command
 def make_snapshots(snapshotter_name, userdata=None, verbosity=2):
     snap = configure_snapshotter(snapshotter_name, userdata)
-
     snap.make_snapshots()
 
 
@@ -67,6 +66,10 @@ def test(verbosity=2):
 
 def main():
     pass
+
+from snaptastic import __version__
+if '--version' in sys.argv:
+    print 'Snaptastic version %s' % __version__
 
 
 p = ArghParser()
