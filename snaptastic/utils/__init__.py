@@ -1,4 +1,8 @@
+import logging
 import os
+
+
+logger = logging.getLogger(__name__)
 
 
 def add_tags(object_, tags):
@@ -25,3 +29,14 @@ def get_ec2_conn():
 def is_root_dev(mount_point):
     is_root_dev = os.stat('/').st_dev == os.stat(mount_point).st_dev
     return is_root_dev
+
+
+def try_dict_config(dict_config):
+    from snaptastic.utils.log import dictConfig
+    try:
+        dictConfig(dict_config)
+    except ValueError, e:
+        #if we have not file system
+        dict_config['loggers']['snaptastic']['handlers'] = ['default']
+        dictConfig(dict_config)
+        logger.warn('Couldnt write logs to files, got error %s', e)

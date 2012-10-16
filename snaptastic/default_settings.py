@@ -58,7 +58,7 @@ else:
 
 #backport for dictconfig if we are running on 2.6
 from snaptastic.utils import log
-from snaptastic.utils.log import dictConfig
+from snaptastic.utils import try_dict_config
 #backport check_output to support 2.6
 from snaptastic.utils import sub
-dictConfig(LOGGING_CONFIG)
+try_dict_config(LOGGING_CONFIG)
