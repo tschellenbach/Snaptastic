@@ -42,6 +42,7 @@ class FormatException(SnaptasticException):
 class AttachmentException(SnaptasticException):
     pass
 
+
 class DetachmentException(SnaptasticException):
     pass
 
