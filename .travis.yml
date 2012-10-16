@@ -18,5 +18,5 @@ before_script:
   - pyflakes -x W snaptastic
 script:
   - TRAVIS=yes pip install -e .
-  - coverage run setup.py test
+  - coverage run -m unittest snaptastic.tests
   - coverage report
