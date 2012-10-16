@@ -39,8 +39,8 @@ def setup_file_logging(LOGGING_CONFIG):
 
     If that doesn't work fallback to stream logging
     '''
-    from copy import copy
-    LOGGING_CONFIG = copy(LOGGING_CONFIG)
+    from copy import deepcopy
+    LOGGING_CONFIG = deepcopy(LOGGING_CONFIG)
     from snaptastic.utils.log import dictConfig
     try:
         error_log_path = os.path.join('/var', 'log', 'snaptastic', 'error.log')
@@ -66,7 +66,7 @@ def setup_file_logging(LOGGING_CONFIG):
                 'filename': log_path
             }
         }
-        FILE_LOGGING_CONFIG = copy(LOGGING_CONFIG)
+        FILE_LOGGING_CONFIG = deepcopy(LOGGING_CONFIG)
         FILE_LOGGING_CONFIG['handlers'].update(FILE_HANDLERS)
         FILE_LOGGING_CONFIG['loggers']['snaptastic']['handlers'] = [
             'default', 'file', 'error_file']
