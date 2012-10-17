@@ -21,7 +21,7 @@ pip install snaptastic
 **settings file**
 
 Create a settings file
-/etc/snaptastic/snaptastic_settings.py
+**/etc/snaptastic/snaptastic_settings.py**
 ```python
 AWS_ACCESS_KEY_ID = 'key'
 AWS_SECRET_ACCESS_KEY = 'secret'
