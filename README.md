@@ -62,8 +62,11 @@ Tutorial
 snaptastic mount-snapshots solr
 ```
 you should now have a mounted volume on /mnt/solr/
+
+```bash
 lets add a file to it
 sudo touch /mnt/solr/helloworld
+```
 
 **make snapshots**
 
