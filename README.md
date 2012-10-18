@@ -1,6 +1,11 @@
 Snaptastic by Mike Ryan & Thierry Schellenbach ([mellowmorning.com](http://www.mellowmorning.com/))
 -------------------------------------------------------------------------------------------------
 
+Snaptastic allows you to automate the snapshotting (backup) and mounting of volumes
+on your EC2 instances.
+
+It uses tagging of snapshots to figure out which snapshot should be used to populate a volume upon boot.
+
 About the Author
 ----------------
 
@@ -77,6 +82,40 @@ check to see if /mnt/solr/ is actually gone
 ```python
 snaptastic mount-snapshots solr
 ```
+
+customizing the tagging
+-----------------------
+
+When mounting volumes, snaptastic will search for snapshots with the correct tags.
+By default it will look for:
+
+ * role
+ * cluster
+ * environment
+ * mount point (you're advised not to change this)
+
+To uniquely identify snapshots to application logic.
+Changing the tags which are used to fit with your application setup is trivial.
+Simply subclass the snapshotter class and change the get_filter_tags function.
+Have a look at the example below:
+
+```python
+class CustomFilterSnapshotter(Snapshotter):
+    name = 'filter_example'
+    
+    def get_filter_tags(self):
+        '''
+        The tags which are used for finding the correct snapshot to load from.
+        In addition to these tags, mount point is also always added.
+        
+        Use these to unique identify different parts of your infrastructure
+        '''
+        tags = {
+            'group': self.userdata['group'],
+        }
+        return tags
+```
+
 
 settings file
 -------------

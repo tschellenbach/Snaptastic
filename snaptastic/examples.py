@@ -23,6 +23,42 @@ class SOLRSnapshotter(Snapshotter):
         return volumes
 
 
+class UserdataSnapshotter(Snapshotter):
+    '''
+    Looks for a list of volumes in the instance's userdata
+    [{
+       "device": "/dev/sdf1",
+       "mount_point": "/var/lib/postgresql/9.1/main",
+       "size": 200
+    }]
+    '''
+    name = 'userdata_example'
+
+    def get_volumes(self):
+        volume_dicts = self.userdata['volumes']
+        volumes = []
+        for volume_dict in volume_dicts:
+            volume = EBSVolume(**volume_dict)
+            volumes.append(volume)
+        return volumes
+    
+ 
+class CustomFilterSnapshotter(Snapshotter):
+    name = 'filter_example'
+    
+    def get_filter_tags(self):
+        '''
+        The tags which are used for finding the correct snapshot to load from.
+        In addition to these tags, mount point is also always added.
+        
+        Use these to unique identify different parts of your infrastructure
+        '''
+        tags = {
+            'cluster': self.userdata['cluster'],
+        }
+        return tags
+
+
 class PostgreSQLSnapshotter(Snapshotter):
     '''
     Customized mounting hooks for postgres

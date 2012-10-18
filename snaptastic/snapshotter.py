@@ -67,6 +67,20 @@ class Snapshotter(object):
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         volumes = [volume]
         return volumes
+    
+    def get_filter_tags(self):
+        '''
+        The tags which are used for finding the correct snapshot to load from.
+        In addition to these tags, mount point is also always added.
+        
+        Use these to unique identify different parts of your infrastructure
+        '''
+        tags = {
+            'role': self.userdata['role'],
+            'cluster': self.userdata['cluster'],
+            'environment': self.userdata['environment']
+        }
+        return tags
 
     '''
     Main functions to call when using Snapshotter
@@ -265,16 +279,8 @@ class Snapshotter(object):
             self.instance_id, 'blockDeviceMapping')
         return bdm
 
-    def get_context_tags(self):
-        tags = {
-            'role': self.userdata['role'],
-            'cluster': self.userdata['cluster'],
-            'environment': self.userdata['environment']
-        }
-        return tags
-
     def get_expiration_tags(self):
-        context_tags = self.get_context_tags()
+        context_tags = self.get_filter_tags()
         tags = {
             'expires': str(datetime.now() + timedelta(days=self.SNAPSHOT_EXPIRY_DAYS)),
             'created': str(datetime.now()),
@@ -294,7 +300,7 @@ class Snapshotter(object):
 
     def get_cached_snapshots(self):
         if not getattr(self, '_snapshots', None):
-            tags = self.get_context_tags()
+            tags = self.get_filter_tags()
             filters = {}
             for key, value in tags.iteritems():
                 filters['tag:%s' % key] = value
@@ -375,21 +381,3 @@ class Snapshotter(object):
         pass
 
 
-class UserdataSnapshotter(Snapshotter):
-    '''
-    Looks for a list of volumes in the instance's userdata
-    [{
-       "device": "/dev/sdf1",
-       "mount_point": "/var/lib/postgresql/9.1/main",
-       "size": 200
-    }]
-    '''
-    name = 'userdata_example'
-
-    def get_volumes(self):
-        volume_dicts = self.userdata['volumes']
-        volumes = []
-        for volume_dict in volume_dicts:
-            volume = EBSVolume(**volume_dict)
-            volumes.append(volume)
-        return volumes
