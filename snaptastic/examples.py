@@ -41,16 +41,16 @@ class UserdataSnapshotter(Snapshotter):
             volume = EBSVolume(**volume_dict)
             volumes.append(volume)
         return volumes
-    
- 
+
+
 class CustomFilterSnapshotter(Snapshotter):
     name = 'filter_example'
-    
+
     def get_filter_tags(self):
         '''
         The tags which are used for finding the correct snapshot to load from.
         In addition to these tags, mount point is also always added.
-        
+
         Use these to unique identify different parts of your infrastructure
         '''
         tags = {

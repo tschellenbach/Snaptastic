@@ -67,12 +67,12 @@ class Snapshotter(object):
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         volumes = [volume]
         return volumes
-    
+
     def get_filter_tags(self):
         '''
         The tags which are used for finding the correct snapshot to load from.
         In addition to these tags, mount point is also always added.
-        
+
         Use these to unique identify different parts of your infrastructure
         '''
         tags = {
@@ -379,5 +379,3 @@ class Snapshotter(object):
 
     def post_snapshot(self, vol):
         pass
-
-
