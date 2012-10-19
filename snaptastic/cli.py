@@ -34,7 +34,7 @@ def mount_snapshots(snapshotter_name, userdata=None, verbosity=2):
 
 @command
 def unmount_snapshots(snapshotter_name, userdata=None, verbosity=2):
-    unmount = raw_input("Are you sure you want to unmount?")
+    unmount = raw_input("Are you sure you want to unmount?: ")
     if unmount in ['y', 'yeay', 'yes']:
         snap = configure_snapshotter(snapshotter_name, userdata)
         snap.unmount_snapshots()

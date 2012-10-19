@@ -176,9 +176,11 @@ class Snapshotter(object):
         Unmounting the volumes, mainly for testing
         '''
         volumes = volumes or self.get_volumes()
+        self.pre_unmounts(volumes)
         logger.info('unmounting volumes %s', volumes)
         for vol in volumes:
             #first unmount
+            self.pre_unmount(vol)
             try:
                 vol.unmount()
             except exceptions.UnmountException, e:
@@ -189,6 +191,8 @@ class Snapshotter(object):
                 self.detach_volume(vol, volume_id)
             except Exception, e:
                 logger.warn(e)
+            self.post_unmount(vol)
+        self.post_unmounts(volumes)
         return volumes
 
     '''
@@ -268,7 +272,7 @@ class Snapshotter(object):
             waited += 1
 
         if waited == MAX_DETACHMENT_WAIT:
-            error_format = 'Device didnt attach within % seconds'
+            error_format = 'Device didnt detach within % seconds'
             raise exceptions.DetachmentException(
                 error_format, MAX_DETACHMENT_WAIT)
 
@@ -366,6 +370,18 @@ class Snapshotter(object):
         pass
 
     def post_mount(self, vol):
+        pass
+
+    def pre_unmounts(self, volumes):
+        pass
+
+    def post_unmounts(self, volumes):
+        pass
+
+    def pre_unmount(self, vol):
+        pass
+
+    def post_unmount(self, vol):
         pass
 
     def pre_snapshots(self, volumes):
