@@ -22,7 +22,7 @@ BASE_LOGGING_CONFIG = {
         'default': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'basic',
+            'formatter': 'detailed',
             'stream': 'ext://sys.stdout',
         },
         'error': {
