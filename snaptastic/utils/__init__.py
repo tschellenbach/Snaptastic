@@ -58,12 +58,14 @@ def setup_file_logging(LOGGING_CONFIG):
             'error_file': {
                 'level': 'ERROR',
                 'class': 'logging.FileHandler',
-                'filename': error_log_path
+                'filename': error_log_path,
+                'formatter': 'detailed',
             },
             'file': {
                 'level': 'INFO',
                 'class': 'logging.FileHandler',
-                'filename': log_path
+                'filename': log_path,
+                'formatter': 'detailed',
             }
         }
         FILE_LOGGING_CONFIG = deepcopy(LOGGING_CONFIG)
