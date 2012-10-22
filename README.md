@@ -130,6 +130,105 @@ Snaptastic searches for its setting file at:
 * /etc/snaptastic_settings.py
 * /etc/snaptastic/snaptastic_settings.py
 
+hooks
+-----
+
+Snaptastic defines several hooks to allow custom snapshotting behaviour.
+
+The following hooks are available:
+
+ * pre_mounts(self, volumes):
+ * post_mounts(self, volumes):
+ * pre_mount(self, vol):
+ * post_mount(self, vol):
+ * pre_unmounts(self, volumes):
+ * post_unmounts(self, volumes):
+ * pre_unmount(self, vol):
+ * post_unmount(self, vol):
+ * pre_snapshots(self, volumes):
+ * post_snapshots(self, volumes):
+ * pre_snapshot(self, vol):
+ * post_snapshot(self, vol):
+
+examples
+--------
+
+Basic volume customization
+
+```python
+class MySnapshotter(Snapshotter):
+    name = 'simple_example'
+
+    def get_volumes(self):
+        volumes = [EBSVolume('/dev/sdf1', '/mnt/index', size=200)]
+        return volumes
+```
+
+Customizing filter tags
+```python
+class CustomFilterSnapshotter(Snapshotter):
+    name = 'filter_example'
+    
+    def get_filter_tags(self):
+        '''
+        The tags which are used for finding the correct snapshot to load from.
+        In addition to these tags, mount point is also always added.
+        
+        Use these to unique identify different parts of your infrastructure
+        '''
+        tags = {
+            'group': self.userdata['group'],
+        }
+        return tags
+```
+
+Reading volumes from the userdata
+```python
+class UserdataSnapshotter(Snapshotter):
+    '''
+    Looks for a list of volumes in the instance's userdata
+    [{
+       "device": "/dev/sdf1",
+       "mount_point": "/var/lib/postgresql/9.1/main",
+       "size": 200
+    }]
+    '''
+    name = 'userdata_example'
+
+    def get_volumes(self):
+        volume_dicts = self.userdata['volumes']
+        volumes = []
+        for volume_dict in volume_dicts:
+            volume = EBSVolume(**volume_dict)
+            volumes.append(volume)
+        return volumes
+```
+
+Using the hooks
+
+
+```python
+class PostgreSQLSnapshotter(Snapshotter):
+    '''
+    Customized mounting hooks for postgres
+    '''
+    name = 'postgres_example'
+
+    def pre_mounts(self):
+        import subprocess
+        subprocess.check_output(['/etc/init.d/postgresql', 'stop'])
+
+    def post_mounts(self):
+        import subprocess
+        # fix permissions on postgresql dirs
+        subprocess.check_output(['chmod', '-R', '0700', '/var/lib/postgresql'])
+        subprocess.check_output(
+            ['chown', '-R', 'postgres:postgres', '/var/lib/postgresql'])
+
+```
+
+
+
 
 Features
 --------
