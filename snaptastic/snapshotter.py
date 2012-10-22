@@ -299,7 +299,7 @@ class Snapshotter(object):
         filter_tags = self.get_filter_tags()
         expiration_tags = self.get_expiration_tags()
         tags = dict(
-            instance_id=self.instance_id(),
+            instance_id=self.instance_id,
             mount_point=volume.mount_point,
         )
         tags.update(filter_tags)

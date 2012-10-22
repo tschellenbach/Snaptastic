@@ -24,6 +24,7 @@ class BaseTest(unittest2.TestCase):
         placement = dict(instance_id='a123')
         placement['availability-zone'] = 'test-az'
         metadata = dict(placement=placement)
+        metadata['instance-id'] = 'instance-id'
         mapping = dict()
         bdm = dict()
         mapping['/dev/sdf'] = mock.Mock()
@@ -76,13 +77,13 @@ class TestCreateSnapshot(BaseTest):
                 snap.make_snapshot(volume)
         args, kwargs = con.create_snapshot.call_args
         description = kwargs['description']
-        self.assertEqual(description, 'snapshot-role-test-cluster-/mnt/test')
+        self.assertEqual(description, 'cluster snapshot of /mnt/test')
 
     def test_snapshot_name(self):
         snap = self.get_test_snapshotter()
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
         snapshot_name = snap.get_snapshot_description(volume)
-        self.assertEqual(snapshot_name, 'snapshot-role-test-cluster-/mnt/test')
+        self.assertEqual(snapshot_name, 'cluster snapshot of /mnt/test')
 
 
 class TestMounting(BaseTest):
