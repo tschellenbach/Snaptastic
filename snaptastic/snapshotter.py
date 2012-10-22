@@ -287,7 +287,7 @@ class Snapshotter(object):
             'created': str(datetime.now()),
         }
         return tags
-    
+
     def get_tags_for_volume(self, volume):
         '''
         Includes
