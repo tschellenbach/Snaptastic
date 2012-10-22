@@ -81,7 +81,7 @@ class TestCreateSnapshot(BaseTest):
     def test_snapshot_name(self):
         snap = self.get_test_snapshotter()
         volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
-        snapshot_name = snap.get_snapshot_name(volume)
+        snapshot_name = snap.get_snapshot_description(volume)
         self.assertEqual(snapshot_name, 'snapshot-role-test-cluster-/mnt/test')
 
 

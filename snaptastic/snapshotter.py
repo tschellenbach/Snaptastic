@@ -106,9 +106,9 @@ class Snapshotter(object):
 
     def make_snapshot(self, vol):
         #get a snapshot name
-        snapshot_name = self.get_snapshot_name(vol)
+        description = self.get_snapshot_description(vol)
         logger.info(
-            'preparing to create a snapshot with name %s', snapshot_name)
+            'preparing to create a snapshot with description %s', description)
         # find the volume ID for this device
         volume_id = self.get_volume_id(vol)
         #get the tags, note that these are used for finding the right snapshot
@@ -117,7 +117,7 @@ class Snapshotter(object):
         with freeze(vol.mount_point):
             logger.info('creating snapshot')
             snapshot = self.con.create_snapshot(
-                volume_id, description=snapshot_name)
+                volume_id, description=description)
             logger.info('succesfully created snapshot with id %s', snapshot.id)
         #Add tags
         logger.info('tagging snapshot %s with tags %s', snapshot.id, tags)
@@ -345,14 +345,15 @@ class Snapshotter(object):
             raise exceptions.MissingSnapshot(e.message)
         return latest_snapshot
 
-    SNAPSHOT_NAME_FORMAT = "snapshot-%(role)s-%(environment)s-%(cluster)s-%(mount_point)s"
+    #Example, Redis.goteam.be snapshot of /mnt/persistent/
+    SNAPSHOT_DESCRIPTION_FORMAT = "%(cluster)s snapshot of %(mount_point)s"
 
-    def get_snapshot_name(self, vol):
+    def get_snapshot_description(self, vol):
         format_dict = dict(
             mount_point=vol.mount_point
         )
         format_dict.update(self.userdata)
-        snapshot_name = self.SNAPSHOT_NAME_FORMAT % format_dict
+        snapshot_name = self.SNAPSHOT_DESCRIPTION_FORMAT % format_dict
         snapshot_name = snapshot_name.replace('_', '-')
         return snapshot_name
 
