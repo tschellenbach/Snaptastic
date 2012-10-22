@@ -112,8 +112,7 @@ class Snapshotter(object):
         # find the volume ID for this device
         volume_id = self.get_volume_id(vol)
         #get the tags, note that these are used for finding the right snapshot
-        tags = self.get_expiration_tags()
-        tags['mount_point'] = vol.mount_point
+        tags = self.get_tags_for_volume(vol)
         #Don't freeze more than we need to
         with freeze(vol.mount_point):
             logger.info('creating snapshot')
@@ -222,8 +221,7 @@ class Snapshotter(object):
                                              snapshot=snapshot_id
                                              )
         # tag the volume
-        tags = self.get_expiration_tags()
-        tags['mount-point'] = vol.mount_point
+        tags = self.get_tags_for_volume(vol)
         logger.info('tagging volume %s with tags %s', boto_volume.id, tags)
         add_tags(boto_volume, tags)
         logger.info('tags added succesfully')
@@ -284,13 +282,29 @@ class Snapshotter(object):
         return bdm
 
     def get_expiration_tags(self):
-        context_tags = self.get_filter_tags()
         tags = {
             'expires': str(datetime.now() + timedelta(days=self.SNAPSHOT_EXPIRY_DAYS)),
             'created': str(datetime.now()),
         }
-        context_tags.update(tags)
-        return context_tags
+        return tags
+    
+    def get_tags_for_volume(self, volume):
+        '''
+        Includes
+        - filter tags (role, cluster, environment)
+        - expiration tags (expires, created)
+        - mount tag (mount point)
+        - instance tag (for debugging)
+        '''
+        filter_tags = self.get_filter_tags()
+        expiration_tags = self.get_expiration_tags()
+        tags = dict(
+            instance_id=self.instance_id(),
+            mount_point=volume.mount_point,
+        )
+        tags.update(filter_tags)
+        tags.update(expiration_tags)
+        return tags
 
     def get_volume_id(self, vol):
         bdm_mapping = self.bdm['blockDeviceMapping']
