@@ -40,7 +40,7 @@ setup(
     author=__maintainer__,
     author_email=__email__,
     license=license_text,
-    url='http://github.com/tschellenbach/Django-facebook',
+    url='http://github.com/tschellenbach/Snaptastic',
     description=DESCRIPTION,
     long_description=long_description,
     packages=find_packages(exclude=("tests",)),
