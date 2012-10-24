@@ -60,6 +60,7 @@ class Cleaner(object):
         running_amis = set(self.get_running_amis())
         our_amis = set(self.get_our_amis())
         unused_amis = list(our_amis - running_amis)
+        unused_amis.sort(key=lambda x: unicode(x))
         return unused_amis
 
     def get_missing_amis(self):
@@ -141,7 +142,7 @@ class Cleaner(object):
 
     def cleanup_snapshots(self):
         expired_snapshots = self.get_expired_snapshots()
-        self.delete_snapshots(expired_snapshots[1:])
+        self.delete_snapshots(expired_snapshots)
 
     def useless_volumes(self):
         volumes = self.con.get_all_volumes()
@@ -154,6 +155,13 @@ class Cleaner(object):
     def cleanup_volumes(self):
         useless_volumes = self.useless_volumes()
         self.delete_volumes(useless_volumes)
+        
+    def cleanup_images(self):
+        unused_amis = self.get_unused_amis()
+        for ami in unused_amis:
+            print 'removing ami %s' % ami
+            self.con.deregister_image(ami, delete_snapshot=True)
+            
 
     def delete_volumes(self, volumes):
         for v in volumes:
@@ -161,11 +169,15 @@ class Cleaner(object):
             v.delete()
 
     def clean(self, component):
-        if component == 'volume':
+        if component == 'volumes':
             self.cleanup_volumes()
         elif component == 'snapshots':
             self.cleanup_snapshots()
         elif component == 'images':
             self.cleanup_images()
+        elif component == 'all':
+            self.cleanup_images()
+            self.cleanup_volumes()
+            self.cleanup_snapshots()
         else:
             raise ValueError('Dont know how to clean %s' % component)
