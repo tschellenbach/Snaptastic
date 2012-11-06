@@ -155,13 +155,12 @@ class Cleaner(object):
     def cleanup_volumes(self):
         useless_volumes = self.useless_volumes()
         self.delete_volumes(useless_volumes)
-        
+
     def cleanup_images(self):
         unused_amis = self.get_unused_amis()
         for ami in unused_amis:
             print 'removing ami %s' % ami
             self.con.deregister_image(ami, delete_snapshot=True)
-            
 
     def delete_volumes(self, volumes):
         for v in volumes:
