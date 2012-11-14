@@ -259,6 +259,7 @@ class Snapshotter(object):
         return boto_volume
 
     def detach_volume(self, ebs_volume, volume_id):
+        detached = False
         MAX_DETACHMENT_WAIT = 45
         waited = 0
         logger.info('now detaching %s', volume_id)
