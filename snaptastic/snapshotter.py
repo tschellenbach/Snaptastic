@@ -136,9 +136,12 @@ class Snapshotter(object):
             self.pre_mount(vol)
             try:
                 self.mount_snapshot(vol)
-            except DeviceAlreadyExists:
-                if not ignore_mounted:
+            except exceptions.DeviceAlreadyExists:
+                if ignore_mounted:
+                    logger.info("Ignoring {}".format(vol))
+                else:
                     raise
+
             self.post_mount(vol)
 
         self.post_mounts(volumes)
