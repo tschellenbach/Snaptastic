@@ -30,7 +30,18 @@ class EBSVolume(object):
         self.file_system = file_system
 
     def __repr__(self):
-        return 'EBSVolume on %s from %s(%s GB)' % (self.mount_point, self.device, self.size)
+        return 'EBSVolume on %s from %s(%s GB) is %s ' \
+            % (self.mount_point, self.device, self.size, self.status)
+
+    def status(self):
+        if self.is_mounted():
+            return "mounted"
+        else:
+            return "not mounted"
+
+    def is_mounted(self):
+        """ Assuming all mounts are done through snaptastic """
+        return os.path.exists(self.mount_point)
 
     @property
     def instance_device(self):
