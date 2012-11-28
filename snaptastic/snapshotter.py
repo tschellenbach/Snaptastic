@@ -124,16 +124,21 @@ class Snapshotter(object):
         add_tags(snapshot, tags)
         return snapshot
 
-    def mount_snapshots(self, volumes=None):
-        '''
-        Loops through the volumes and runs mount_volume on them
+    def mount_snapshots(self, volumes=None, ignore_mounted=False):
+        ''' Loops through the volumes and runs mount_volume on them
+
+        When ignore_mounted is True it will ignore DeviceAlreadyExists errors
         '''
         volumes = volumes or self.get_volumes()
         logger.info('preparing to mount %s volumes', len(volumes))
         self.pre_mounts(volumes)
         for vol in volumes:
             self.pre_mount(vol)
-            self.mount_snapshot(vol)
+            try:
+                self.mount_snapshot(vol)
+            except DeviceAlreadyExists:
+                if not ignore_mounted:
+                    raise
             self.post_mount(vol)
 
         self.post_mounts(volumes)
@@ -232,7 +237,10 @@ class Snapshotter(object):
         '''
         Attaches the given boto_volume class to the running instance
         '''
+        if os.path.exists(ebs_volume.instance_device):
+            logger.warn("The device {} already exists.".format(ebs_volume.instance_device))
         # attaching a volume to our instance
+
         message_format = 'Attaching volume %s to instance %s'
         logger.info(message_format, boto_volume.id, self.instance_id)
         self.con.attach_volume(

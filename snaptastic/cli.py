@@ -27,9 +27,10 @@ def make_snapshots(snapshotter_name, userdata=None, verbosity=2):
 
 
 @command
-def mount_snapshots(snapshotter_name, userdata=None, verbosity=2):
+def mount_snapshots(snapshotter_name, userdata=None, verbosity=2,
+                    ignore_mounted=False):
     snap = configure_snapshotter(snapshotter_name, userdata)
-    snap.mount_snapshots()
+    snap.mount_snapshots(ignore_mounted=ignore_mounted)
 
 
 @command
