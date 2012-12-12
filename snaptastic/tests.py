@@ -47,7 +47,7 @@ class TestFreeze(unittest2.TestCase):
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
                 try:
-                    with freeze('/mnt/test/'):
+                    with freeze('/mnt/test/', 'xfs_freeze'):
                         check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'], stderr=subprocess.STDOUT)
                         raise Exception('test')
                 except:
