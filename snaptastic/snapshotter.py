@@ -243,7 +243,8 @@ class Snapshotter(object):
         Attaches the given boto_volume class to the running instance
         '''
         if os.path.exists(ebs_volume.instance_device):
-            logger.warn("The device {} already exists.".format(ebs_volume.instance_device))
+            logger.warn("The device {} already exists.".format(
+                ebs_volume.instance_device))
         # attaching a volume to our instance
 
         message_format = 'Attaching volume %s to instance %s'

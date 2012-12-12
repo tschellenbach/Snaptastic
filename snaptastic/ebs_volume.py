@@ -135,7 +135,7 @@ class EBSVolume(object):
                                     stderr=subprocess.STDOUT)
         except:
             raise Exception(
-                "The format command (%s) for filesystem %s cannot be found" % \
+                "The format command (%s) for filesystem %s cannot be found" %
                 (self.file_system.format_cmd, self.file_system.name)
             )
 
@@ -144,6 +144,6 @@ class EBSVolume(object):
                                     stderr=subprocess.STDOUT)
         except:
             raise Exception(
-                "The freeze command (%s) for filesystem %s cannot be found" % \
+                "The freeze command (%s) for filesystem %s cannot be found" %
                 (self.file_system.freeze_cmd, self.file_system.name)
             )
