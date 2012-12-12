@@ -38,7 +38,8 @@ class TestFreeze(unittest2.TestCase):
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
                 for fs in [FS.EXT3, FS.EXT4, FS.REISERFS, FS.JFS, FS.XFS]:
-                    vol = EBSVolume("/dev/sdf", "/mnt/test", size=1, file_system=fs)
+                    vol = EBSVolume("/dev/sdf", "/mnt/test", size=1,
+                                    file_system=fs, check_support=False)
                     with vol.freeze():
                         check.assert_called_with(
                             [fs.freeze_cmd, '-f', '/mnt/test'],
@@ -50,7 +51,8 @@ class TestFreeze(unittest2.TestCase):
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
                 for fs in [FS.EXT3, FS.EXT4, FS.REISERFS, FS.JFS, FS.XFS]:
-                    vol = EBSVolume("/dev/sdf", "/mnt/test", size=1, file_system=fs)
+                    vol = EBSVolume("/dev/sdf", "/mnt/test", size=1,
+                                    file_system=fs, check_support=False)
                     try:
                         with vol.freeze():
                             check.assert_called_with([fs.freeze_cmd, '-f', '/mnt/test'], stderr=subprocess.STDOUT)

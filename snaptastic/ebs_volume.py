@@ -45,14 +45,16 @@ class EBSVolume(object):
     FORMAT_CMD = 'mkfs.xfs %(device)s'
 
     def __init__(self, device, mount_point, size=5, delete_on_termination=True,
-                 file_system=FILESYSTEMS.XFS, mount_options="defaults"):
+                 file_system=FILESYSTEMS.XFS, mount_options="defaults",
+                 check_support=True):
         self.device = device
         self.size = size
         self.mount_point = mount_point
         self.mount_options = mount_options
         self.delete_on_termination = delete_on_termination
         self.file_system = file_system
-        self.ensure_filesytem_supported()
+        if check_support:
+            self.ensure_filesytem_supported()
 
     def __repr__(self):
         return 'EBSVolume on %s from %s(%s GB) is %s ' \
