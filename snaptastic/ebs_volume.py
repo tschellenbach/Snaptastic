@@ -13,27 +13,27 @@ class FILESYSTEMS:
     class XFS:
         name = "xfs"
         freeze_cmd = "xfs_freeze"
-        format_cmd = 'mkfs.xfs %(device)s'
+        format_cmd = 'mkfs.xfs'
 
     class JFS:
         name = "jfs"
         freeze_cmd = "fsfreeze"
-        format_cmd = 'mkfs.jfs %(device)s'
+        format_cmd = 'mkfs.jfs'
 
     class EXT3:
         name = "ext3"
         freeze_cmd = "fsfreeze"
-        format_cmd = 'mkfs.ext3 %(device)s'
+        format_cmd = 'mkfs.ext3'
 
     class EXT4:
         name = "ext4"
         freeze_cmd = "fsfreeze"
-        format_cmd = 'mkfs.ext4 %(device)s'
+        format_cmd = 'mkfs.ext4'
 
     class REISERFS:
         name = "reiserfs"
         freeze_cmd = "fsfreeze"
-        format_cmd = 'mkfs.reiserfs %(device)s'
+        format_cmd = 'mkfs.reiserfs'
 
 
 class EBSVolume(object):
@@ -52,6 +52,7 @@ class EBSVolume(object):
         self.mount_options = mount_options
         self.delete_on_termination = delete_on_termination
         self.file_system = file_system
+        self.ensure_filesytem_supported()
 
     def __repr__(self):
         return 'EBSVolume on %s from %s(%s GB) is %s ' \
@@ -116,12 +117,33 @@ class EBSVolume(object):
         '''
         Format the volume
         '''
-        cmd = self.file_system.format_cmd % {'device': self.instance_device}
         try:
-            logger.info('formatting device %s with command %s',
-                        self.instance_device, cmd)
-            subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
+            logger.info('formatting device %s with command %s %s',
+                        self.instance_device, self.file_system.format_cmd,
+                        self.instance_device)
+            subprocess.check_output(
+                [self.file_system.format_cmd, self.instance_device],
+                stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError, e:
             msg = 'Error formatting %s: %s' % (self.instance_device, e.output)
             logger.error(msg)
             raise exceptions.FormattingException(msg)
+
+    def ensure_filesytem_supported(self):
+        try:
+            subprocess.check_output(['which', self.file_system.format_cmd],
+                                    stderr=subprocess.STDOUT)
+        except:
+            raise Exception(
+                "The format command for filesystem %s cannot be found" % \
+                self.file_system.name
+            )
+
+        try:
+            subprocess.check_output(['which', self.file_system.freeze_cmd],
+                                    stderr=subprocess.STDOUT)
+        except:
+            raise Exception(
+                "The freeze command for filesystem %s cannot be found" % \
+                self.file_system.name
+            )
