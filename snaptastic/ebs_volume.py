@@ -1,33 +1,58 @@
-from snaptastic import exceptions
 import logging
 import os
 import subprocess
+
+from snaptastic import exceptions
+from snaptastic.freeze import freeze
+
 
 logger = logging.getLogger(__name__)
 
 
 class FILESYSTEMS:
     class XFS:
-        pass
+        name = "xfs"
+        freeze_cmd = "xfs_freeze"
+        format_cmd = 'mkfs.xfs %(device)s'
+
+    class JFS:
+        name = "jfs"
+        freeze_cmd = "fsfreeze"
+        format_cmd = 'mkfs.jfs %(device)s'
+
+    class EXT3:
+        name = "ext3"
+        freeze_cmd = "fsfreeze"
+        format_cmd = 'mkfs.ext3 %(device)s'
 
     class EXT4:
-        pass
+        name = "ext4"
+        freeze_cmd = "fsfreeze"
+        format_cmd = 'mkfs.ext4 %(device)s'
+
+    class REISERFS:
+        name = "reiserfs"
+        freeze_cmd = "fsfreeze"
+        format_cmd = 'mkfs.reiserfs %(device)s'
 
 
 class EBSVolume(object):
     '''
     Small wrapper class for specifying your desired EBS volume setup
     '''
-    MOUNT_CMD = 'mount -t xfs -o defaults %(device)s %(mount_point)s'
+    MOUNT_CMD = 'mount -t %(file_system)s -o %(options)s %(device)s %(mount_point)s'
     UNMOUNT_CMD = 'umount %(device)s'
     FORMAT_CMD = 'mkfs.xfs %(device)s'
 
-    def __init__(self, device, mount_point, size=5, delete_on_termination=True, file_system=FILESYSTEMS.XFS):
+    def __init__(self, device, mount_point, size=5, delete_on_termination=True,
+                 file_system=FILESYSTEMS.XFS, mount_options="defaults"):
         self.device = device
         self.size = size
         self.mount_point = mount_point
+        self.mount_options = mount_options
         self.delete_on_termination = delete_on_termination
         self.file_system = file_system
+        self.freeze = freeze(self.mount_point, self.file_system.freeze_cmd)
 
     def __repr__(self):
         return 'EBSVolume on %s from %s(%s GB) is %s ' \
@@ -62,8 +87,11 @@ class EBSVolume(object):
         try:
             logger.info('mounting device %s on %s',
                         self.instance_device, self.mount_point)
-            cmd = self.MOUNT_CMD % {'device':
-                                    self.instance_device, 'mount_point': self.mount_point}
+            cmd = self.MOUNT_CMD % {
+                'file_system': self.file_system.name,
+                'options': self.mount_options,
+                'device': self.instance_device,
+                'mount_point': self.mount_point}
             subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError, e:
             msg = 'Error mounting %s: %s' % (self.instance_device, e.output)
@@ -86,7 +114,7 @@ class EBSVolume(object):
         '''
         Format the volume
         '''
-        cmd = self.FORMAT_CMD % {'device': self.instance_device}
+        cmd = self.file_system.format_cmd % {'device': self.instance_device}
         try:
             logger.info('formatting device %s with command %s',
                         self.instance_device, cmd)

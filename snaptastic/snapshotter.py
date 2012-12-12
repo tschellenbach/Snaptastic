@@ -1,14 +1,16 @@
-from boto.utils import get_instance_metadata
-from datetime import timedelta, datetime
-from snaptastic import exceptions
-from snaptastic import get_ec2_conn
-from snaptastic.ebs_volume import EBSVolume
-from snaptastic.utils import get_userdata_dict, add_tags
-from time import sleep
-from xfs_freeze import freeze
-from snaptastic import metaclass
 import logging
 import os
+from time import sleep
+from datetime import timedelta, datetime
+
+from boto.utils import get_instance_metadata
+
+from snaptastic import exceptions
+from snaptastic import get_ec2_conn
+from snaptastic import metaclass
+from snaptastic.ebs_volume import EBSVolume
+from snaptastic.utils import get_userdata_dict, add_tags
+
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +116,7 @@ class Snapshotter(object):
         #get the tags, note that these are used for finding the right snapshot
         tags = self.get_tags_for_volume(vol)
         #Don't freeze more than we need to
-        with freeze(vol.mount_point):
+        with vol.freeze():
             logger.info('creating snapshot')
             snapshot = self.con.create_snapshot(
                 volume_id, description=description)
