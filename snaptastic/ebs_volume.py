@@ -52,7 +52,6 @@ class EBSVolume(object):
         self.mount_options = mount_options
         self.delete_on_termination = delete_on_termination
         self.file_system = file_system
-        self.freeze = freeze(self.mount_point, self.file_system.freeze_cmd)
 
     def __repr__(self):
         return 'EBSVolume on %s from %s(%s GB) is %s ' \
@@ -97,6 +96,9 @@ class EBSVolume(object):
             msg = 'Error mounting %s: %s' % (self.instance_device, e.output)
             logger.error(msg)
             raise exceptions.MountException(msg)
+
+    def freeze(self):
+        return freeze(self.mount_point, self.file_system.freeze_cmd)
 
     def unmount(self):
         try:

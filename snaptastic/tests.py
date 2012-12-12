@@ -11,6 +11,7 @@ import mock
 from snaptastic import EBSVolume
 from snaptastic.freeze import freeze
 from snaptastic import Snapshotter
+from snaptastic.ebs_volume import FILESYSTEMS as FS
 
 
 class BaseTest(unittest2.TestCase):
@@ -36,24 +37,28 @@ class TestFreeze(unittest2.TestCase):
     def test_freeze(self):
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
-                with freeze('/mnt/test/', 'xfs_freeze'):
+                for fs in [FS.EXT3, FS.EXT4, FS.REISERFS, FS.JFS, FS.XFS]:
+                    vol = EBSVolume("/dev/sdf", "/mnt/test", size=1, file_system=fs)
+                    with vol.freeze():
+                        check.assert_called_with(
+                            [fs.freeze_cmd, '-f', '/mnt/test'],
+                            stderr=subprocess.STDOUT)
                     check.assert_called_with(
-                        ['xfs_freeze', '-f', '/mnt/test/'],
-                        stderr=subprocess.STDOUT)
-                check.assert_called_with(
-                    ['xfs_freeze', '-u', '/mnt/test/'], stderr=-2)
+                        [fs.freeze_cmd, '-u', '/mnt/test'], stderr=-2)
 
     def test_freeze_fail(self):
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
-                try:
-                    with freeze('/mnt/test/'):
-                        check.assert_called_with(['xfs_freeze', '-f', '/mnt/test/'], stderr=subprocess.STDOUT)
-                        raise Exception('test')
-                except:
-                    pass
-                check.assert_called_with(
-                    ['xfs_freeze', '-u', '/mnt/test/'], stderr=subprocess.STDOUT)
+                for fs in [FS.EXT3, FS.EXT4, FS.REISERFS, FS.JFS, FS.XFS]:
+                    vol = EBSVolume("/dev/sdf", "/mnt/test", size=1, file_system=fs)
+                    try:
+                        with vol.freeze():
+                            check.assert_called_with([fs.freeze_cmd, '-f', '/mnt/test'], stderr=subprocess.STDOUT)
+                            raise Exception('test')
+                    except:
+                        pass
+                    check.assert_called_with(
+                        [fs.freeze_cmd, '-u', '/mnt/test'], stderr=subprocess.STDOUT)
 
 
 class TestCreateSnapshot(BaseTest):
