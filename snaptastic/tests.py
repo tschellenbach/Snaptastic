@@ -41,8 +41,6 @@ class TestFreeze(unittest2.TestCase):
                     vol = EBSVolume(
                         "/dev/sdf", "/mnt/test", size=1, file_system=fs,
                         check_support=False)
-                    vol = EBSVolume(
-                        "/dev/sdf", "/mnt/test", size=1, file_system=fs)
                     with vol.freeze():
                         check.assert_called_with(
                             [fs.freeze_cmd, '-f', '/mnt/test'],
