@@ -1,4 +1,3 @@
-
 import sys
 import os
 import subprocess
@@ -10,7 +9,7 @@ sys.path.append(parent)
 import unittest2
 import mock
 from snaptastic import EBSVolume
-from snaptastic.xfs_freeze import freeze
+from snaptastic.freeze import freeze
 from snaptastic import Snapshotter
 
 
@@ -37,7 +36,7 @@ class TestFreeze(unittest2.TestCase):
     def test_freeze(self):
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
-                with freeze('/mnt/test/'):
+                with freeze('/mnt/test/', 'xfs_freeze'):
                     check.assert_called_with(
                         ['xfs_freeze', '-f', '/mnt/test/'],
                         stderr=subprocess.STDOUT)
@@ -66,7 +65,7 @@ class TestCreateSnapshot(BaseTest):
                 snap.make_snapshots([volume])
                 self.assertEqual(check.call_count, 2)
                 check.assert_called_with(
-                    ['xfs_freeze', '-u', '/mnt/test'], stderr=subprocess.STDOUT)
+                    [volume.file_system.freeze_cmd, '-u', '/mnt/test'], stderr=subprocess.STDOUT)
 
     def test_make_snapshot(self):
         snap = self.get_test_snapshotter()

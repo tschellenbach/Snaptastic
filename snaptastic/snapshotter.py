@@ -1,14 +1,16 @@
-from boto.utils import get_instance_metadata
-from datetime import timedelta, datetime
-from snaptastic import exceptions
-from snaptastic import get_ec2_conn
-from snaptastic.ebs_volume import EBSVolume
-from snaptastic.utils import get_userdata_dict, add_tags
-from time import sleep
-from xfs_freeze import freeze
-from snaptastic import metaclass
 import logging
 import os
+from time import sleep
+from datetime import timedelta, datetime
+
+from boto.utils import get_instance_metadata
+
+from snaptastic import exceptions
+from snaptastic import get_ec2_conn
+from snaptastic import metaclass
+from snaptastic.ebs_volume import EBSVolume
+from snaptastic.utils import get_userdata_dict, add_tags
+
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +116,7 @@ class Snapshotter(object):
         #get the tags, note that these are used for finding the right snapshot
         tags = self.get_tags_for_volume(vol)
         #Don't freeze more than we need to
-        with freeze(vol.mount_point):
+        with vol.freeze():
             logger.info('creating snapshot')
             snapshot = self.con.create_snapshot(
                 volume_id, description=description)
@@ -124,16 +126,24 @@ class Snapshotter(object):
         add_tags(snapshot, tags)
         return snapshot
 
-    def mount_snapshots(self, volumes=None):
-        '''
-        Loops through the volumes and runs mount_volume on them
+    def mount_snapshots(self, volumes=None, ignore_mounted=False):
+        ''' Loops through the volumes and runs mount_volume on them
+
+        When ignore_mounted is True it will ignore DeviceAlreadyExists errors
         '''
         volumes = volumes or self.get_volumes()
         logger.info('preparing to mount %s volumes', len(volumes))
         self.pre_mounts(volumes)
         for vol in volumes:
             self.pre_mount(vol)
-            self.mount_snapshot(vol)
+            try:
+                self.mount_snapshot(vol)
+            except exceptions.DeviceAlreadyExists:
+                if ignore_mounted:
+                    logger.info("Ignoring {}".format(vol))
+                else:
+                    raise
+
             self.post_mount(vol)
 
         self.post_mounts(volumes)
@@ -232,7 +242,10 @@ class Snapshotter(object):
         '''
         Attaches the given boto_volume class to the running instance
         '''
+        if os.path.exists(ebs_volume.instance_device):
+            logger.warn("The device {} already exists.".format(ebs_volume.instance_device))
         # attaching a volume to our instance
+
         message_format = 'Attaching volume %s to instance %s'
         logger.info(message_format, boto_volume.id, self.instance_id)
         self.con.attach_volume(
