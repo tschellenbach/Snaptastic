@@ -69,7 +69,9 @@ class TestFreeze(unittest2.TestCase):
 class TestCreateSnapshot(BaseTest):
     def test_make_snapshots(self):
         snap = self.get_test_snapshotter()
-        volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
+        volume = EBSVolume(
+            device='/dev/sdf', mount_point='/mnt/test', size=5,
+            check_support=False)
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
                 snap.make_snapshots([volume])
@@ -80,7 +82,9 @@ class TestCreateSnapshot(BaseTest):
     def test_make_snapshot(self):
         snap = self.get_test_snapshotter()
         con = snap.con
-        volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
+        volume = EBSVolume(
+            device='/dev/sdf', mount_point='/mnt/test', size=5,
+            check_support=False)
         with mock.patch('subprocess.check_output'):
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
                 snap.make_snapshot(volume)
@@ -90,7 +94,9 @@ class TestCreateSnapshot(BaseTest):
 
     def test_snapshot_name(self):
         snap = self.get_test_snapshotter()
-        volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
+        volume = EBSVolume(
+            device='/dev/sdf', mount_point='/mnt/test', size=5,
+            check_support=False)
         snapshot_name = snap.get_snapshot_description(volume)
         self.assertEqual(snapshot_name, 'cluster snapshot of /mnt/test')
 
@@ -98,7 +104,9 @@ class TestCreateSnapshot(BaseTest):
 class TestMounting(BaseTest):
     def test_mount_snapshots(self):
         snap = self.get_test_snapshotter()
-        volume = EBSVolume(device='/dev/sdf', mount_point='/mnt/test', size=5)
+        volume = EBSVolume(
+            device='/dev/sdf', mount_point='/mnt/test', size=5,
+            check_support=False)
         snap.get_snapshot = mock.Mock(return_value='1234')
         snap.attach_volume = mock.Mock()
         with mock.patch('subprocess.check_output'):
