@@ -3,6 +3,8 @@ notifications:
   email:
     - mike@fadedink.co.uk
     - thierryschellenbach@gmail.com
+    - tbarbugli@gmail.com
+    - pterk@datatailors.com
 python:
   - 2.6
   - 2.7
