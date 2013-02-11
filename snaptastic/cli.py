@@ -50,10 +50,13 @@ def list_volumes(snapshotter_name, userdata=None, verbosity=2):
 
 
 @command
-def clean(component, userdata=None, verbosity=2):
+def clean(component, userdata=None, force=False, verbosity=2):
     from snaptastic.cleaner import Cleaner
-    clean = raw_input("Are you sure you want to clean?(y,yeay,yes): ")
-    if clean in ['y', 'yeay', 'yes']:
+    run = True
+    if not force:
+        clean = raw_input("Are you sure you want to clean?(y,yeay,yes): ")
+        run = clean in ['y', 'yeay', 'yes']
+    if run:
         cleaner = Cleaner()
         cleaner.clean(component)
 

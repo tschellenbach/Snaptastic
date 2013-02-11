@@ -13,7 +13,7 @@ __status__ = 'Production'
 setup_install = 'setup.py' in sys.argv and 'install' in sys.argv
 
 if not setup_install:
-    from snaptastic.utils import get_ec2_conn, log, sub
+    from snaptastic.utils import get_ec2_conn, log, sub, get_cloudwatch_conn
     from snaptastic.metaclass import get_snapshotter
     from snapshotter import Snapshotter
     from ebs_volume import EBSVolume

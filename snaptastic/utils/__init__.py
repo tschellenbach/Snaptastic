@@ -26,6 +26,15 @@ def get_ec2_conn():
     return ec2_conn
 
 
+def get_cloudwatch_conn():
+    from snaptastic import settings
+    from boto.ec2 import cloudwatch
+    conn = cloudwatch.connect_to_region(settings.REGION,
+                                        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                                        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+    return conn
+
+
 def is_root_dev(mount_point):
     is_root_dev = os.stat('/').st_dev == os.stat(mount_point).st_dev
     return is_root_dev

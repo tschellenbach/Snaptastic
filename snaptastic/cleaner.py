@@ -4,7 +4,7 @@ import collections
 from boto.ec2.connection import EC2Connection
 from boto.ec2 import regions as get_regions
 import logging
-from snaptastic import get_ec2_conn
+from snaptastic import get_ec2_conn, get_cloudwatch_conn
 from boto.utils import get_instance_metadata
 from snaptastic.utils import get_userdata_dict
 logger = logging.getLogger(__name__)
@@ -27,9 +27,9 @@ class Cleaner(object):
         :param bdm: dictionary describing the device mapping
 
         '''
-        #self.userdata = get_userdata_dict() if userdata is None else userdata
-        #self.metadata = get_instance_metadata(
-        #) if metadata is None else metadata
+        # self.userdata = get_userdata_dict() if userdata is None else userdata
+        # self.metadata = get_instance_metadata(
+        # ) if metadata is None else metadata
         self.con = get_ec2_conn() if connection is None else connection
 
     def get_running_amis(self):
@@ -40,6 +40,59 @@ class Cleaner(object):
                 if instance.state == 'running':
                     running_amis[instance.image_id].append(instance)
         return running_amis
+
+    def get_running_instances(self):
+        running_instances = []
+        reservations = self.con.get_all_instances()
+        for reservation in reservations:
+            for instance in reservation.instances:
+                if instance.state == 'running':
+                    running_instances.append(instance)
+        return running_instances
+
+    def cleanup_instances(self):
+        instances = self.get_running_instances()
+        running_instances = len(instances)
+        logger.info('running %s instances', running_instances)
+        c = get_cloudwatch_conn()
+
+        low_utilized_instances = []
+
+        class InstanceDimension(dict):
+            def __init__(self, name, value):
+                self[name] = value
+
+        for instance in instances:
+            from boto.exception import BotoServerError
+            try:
+                end = datetime.datetime.now()
+                start = end - datetime.timedelta(days=1)
+                stats = c.get_metric_statistics(
+                    60 * 60 * 24,
+                    start,
+                    end,
+                    'CPUUtilization',
+                    'AWS/EC2',
+                    'Average',
+                    InstanceDimension("InstanceId", instance.id)
+                )
+                for stat in stats[-1:]:
+                    average = stat['Average']
+                    if average < 5:
+                        instance.cpu_utilization = average
+                        low_utilized_instances.append(instance)
+
+            except BotoServerError, e:
+                print e
+
+        logger.info('found %s instances with low cpu utilization',
+                    len(low_utilized_instances))
+        from pprint import pprint
+        for instance in low_utilized_instances:
+            print '===' * 10
+            print instance
+            pprint(instance.get_attribute('userData'))
+            pprint(instance.tags)
 
     def get_owners(self):
         owners = ['612857642705']
@@ -174,6 +227,8 @@ class Cleaner(object):
             self.cleanup_snapshots()
         elif component == 'images':
             self.cleanup_images()
+        elif component == 'instances':
+            self.cleanup_instances()
         elif component == 'all':
             self.cleanup_images()
             self.cleanup_volumes()
