@@ -65,8 +65,8 @@ class EBSVolume(object):
         return volume_type
 
     def __repr__(self):
-        return 'EBSVolume on %s from %s(%s GB) is %s ' \
-            % (self.mount_point, self.device, self.size, self.status())
+        return 'EBSVolume on %s from %s(%s GB, iops %s) is %s ' \
+            % (self.mount_point, self.device, self.size, self.iops, self.status())
 
     def status(self):
         if self.is_mounted():
