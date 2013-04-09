@@ -226,9 +226,15 @@ class Snapshotter(object):
         # load from a snapshot if we have one
         log_message = 'Creating a volume of size %s in zone %s from snapshot %s'
         logger.info(log_message, vol.size, self.availability_zone, snapshot_id)
+        # tell boto about the iops if we want them :)
+        kwargs = dict()
+        if vol.iops:
+            kwargs['iops'] = vol.iops
         boto_volume = self.con.create_volume(size=vol.size,
                                              zone=self.availability_zone,
-                                             snapshot=snapshot_id
+                                             snapshot=snapshot_id,
+                                             volume_type=vol.volume_type,
+                                             **kwargs
                                              )
         # tag the volume
         tags = self.get_tags_for_volume(vol)

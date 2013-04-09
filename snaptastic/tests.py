@@ -113,6 +113,17 @@ class TestMounting(BaseTest):
             with mock.patch('os.makedirs'):
                 mounted = snap.mount_snapshots([volume])
 
+    def test_mount_iops_snapshots(self):
+        snap = self.get_test_snapshotter()
+        volume = EBSVolume(
+            device='/dev/sdf', mount_point='/mnt/test', size=5, iops=1600,
+            check_support=False)
+        snap.get_snapshot = mock.Mock(return_value='1234')
+        snap.attach_volume = mock.Mock()
+        with mock.patch('subprocess.check_output'):
+            with mock.patch('os.makedirs'):
+                mounted = snap.mount_snapshots([volume])
+
 
 class TestLogLevel(BaseTest):
     def test_loglevel(self):
