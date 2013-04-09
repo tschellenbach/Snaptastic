@@ -97,14 +97,13 @@ def main():
     from snaptastic import __version__
     if '--version' in sys.argv:
         print 'Snaptastic version %s' % __version__
-    
-    
+
     p = ArghParser()
     commands = [make_snapshots, mount_snapshots,
                 list_volumes, unmount_snapshots, clean, test]
     p.add_commands(commands)
     p.dispatch()
-    
-    
+
+
 if __name__ == '__main__':
     main()

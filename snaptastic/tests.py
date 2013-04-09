@@ -58,7 +58,8 @@ class TestFreeze(BaseTest):
                         check_support=False)
                     try:
                         with vol.freeze():
-                            check.assert_called_with([fs.freeze_cmd, '-f', '/mnt/test'], stderr=subprocess.STDOUT)
+                            check.assert_called_with(
+                                [fs.freeze_cmd, '-f', '/mnt/test'], stderr=subprocess.STDOUT)
                             raise Exception('test')
                     except:
                         pass
@@ -135,7 +136,6 @@ class TestLogLevel(BaseTest):
             root_logger = logging.getLogger()
             set_level = root_logger.getEffectiveLevel()
             self.assertEqual(level_object, set_level)
-            
 
 
 if __name__ == '__main__':

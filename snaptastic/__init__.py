@@ -19,11 +19,11 @@ if not setup_install:
     from ebs_volume import EBSVolume
     from snaptastic import settings
 
-    #setup logging
+    # setup logging
     from snaptastic.utils.log import dictConfig
     dictConfig(settings.LOGGING_CONFIG)
 
 
 if not setup_install:
-    #register the examples
+    # register the examples
     from examples import *

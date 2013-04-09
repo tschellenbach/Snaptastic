@@ -42,10 +42,10 @@ BASE_LOGGING_CONFIG = {
 }
 
 
-#backport for dictconfig if we are running on 2.6
+# backport for dictconfig if we are running on 2.6
 from snaptastic.utils import log
-#backport check_output to support 2.6
+# backport check_output to support 2.6
 from snaptastic.utils import sub
 
-#setup the file logging if available
+# setup the file logging if available
 LOGGING_CONFIG = setup_file_logging(BASE_LOGGING_CONFIG)

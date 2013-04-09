@@ -81,9 +81,12 @@ class PostgreSQLSnapshotter(Snapshotter):
                 "/var/lib/postgresql/9.1/_user_profile_queue", "size": 8},
             {"device": "/dev/sdf7", "mount_point":
                 "/var/lib/postgresql/9.1/entity_entity", "size": 40},
-            {"device": "/dev/sdf8", "mount_point": "/var/lib/postgresql/9.1/event_framework_event_handler_queue", "size": 2},
-            {"device": "/dev/sdf9", "mount_point": "/var/lib/postgresql/9.1/user_communication_queue", "size": 2},
-            {"device": "/dev/sdi1", "mount_point": "/var/lib/postgresql/9.1/affiliate_click_tracking", "size": 50},
+            {"device": "/dev/sdf8", "mount_point":
+                "/var/lib/postgresql/9.1/event_framework_event_handler_queue", "size": 2},
+            {"device": "/dev/sdf9", "mount_point":
+                "/var/lib/postgresql/9.1/user_communication_queue", "size": 2},
+            {"device": "/dev/sdi1", "mount_point":
+                "/var/lib/postgresql/9.1/affiliate_click_tracking", "size": 50},
             {"device": "/dev/sdi2", "mount_point":
                 "/var/lib/postgresql/9.1/index01", "size": 30},
             {"device": "/dev/sdi3", "mount_point":

@@ -21,7 +21,8 @@ try:
     SETTINGS_FILE = snaptastic_settings
     logger.info('found settings at %s', snaptastic_settings)
 except ImportError, e:
-    logger.info('didnt find snaptastic settings file in sys.path, search the filesystem')
+    logger.info(
+        'didnt find snaptastic settings file in sys.path, search the filesystem')
     for settings_file in setting_files:
         logger.info('trying settings file %s', settings_file)
         if os.path.isfile(settings_file):

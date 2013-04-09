@@ -1,4 +1,4 @@
-#dict where all snapshotters get registered
+# dict where all snapshotters get registered
 snapshotters = {}
 
 

@@ -94,33 +94,33 @@ class Snapshotter(object):
         snapshots = []
         volumes = volumes or self.get_volumes()
         logger.info('making snapshots of %s volumes', len(volumes))
-        #hook for customizing the behaviour before snapshots
+        # hook for customizing the behaviour before snapshots
         self.pre_snapshots(volumes)
         for vol in volumes:
             self.pre_snapshot(vol)
             snapshot = self.make_snapshot(vol)
             snapshots.append(snapshot)
             self.post_snapshot(vol)
-        #hook for customizing the behavior after snapshots
+        # hook for customizing the behavior after snapshots
         self.post_snapshots(volumes)
         return snapshots
 
     def make_snapshot(self, vol):
-        #get a snapshot name
+        # get a snapshot name
         description = self.get_snapshot_description(vol)
         logger.info(
             'preparing to create a snapshot with description %s', description)
         # find the volume ID for this device
         volume_id = self.get_volume_id(vol)
-        #get the tags, note that these are used for finding the right snapshot
+        # get the tags, note that these are used for finding the right snapshot
         tags = self.get_tags_for_volume(vol)
-        #Don't freeze more than we need to
+        # Don't freeze more than we need to
         with vol.freeze():
             logger.info('creating snapshot')
             snapshot = self.con.create_snapshot(
                 volume_id, description=description)
             logger.info('succesfully created snapshot with id %s', snapshot.id)
-        #Add tags
+        # Add tags
         logger.info('tagging snapshot %s with tags %s', snapshot.id, tags)
         add_tags(snapshot, tags)
         return snapshot
@@ -160,7 +160,7 @@ class Snapshotter(object):
         :param ebs_volume: the volume specification, we're mounting
         :type ebs_volume: EBSVolume
         '''
-        #see if we have a snapshot we can start from
+        # see if we have a snapshot we can start from
         try:
             snapshot_id = self.get_snapshot(ebs_volume)
         except exceptions.MissingSnapshot, e:
@@ -168,15 +168,15 @@ class Snapshotter(object):
         logger.info('mounting a volume to %s with snapshot %s',
                     ebs_volume.mount_point, snapshot_id)
 
-        #create the device and attach
+        # create the device and attach
         boto_volume = self.create_volume(ebs_volume, snapshot_id=snapshot_id)
-        #attach the volume to the instance
+        # attach the volume to the instance
         self.attach_volume(ebs_volume, boto_volume)
         # if it's not from a snapshot we need to format
         if snapshot_id is None:
             ebs_volume.format()
 
-        #mount the volume
+        # mount the volume
         ebs_volume.mount()
 
     def unmount_snapshots(self, volumes=None):
@@ -187,14 +187,14 @@ class Snapshotter(object):
         self.pre_unmounts(volumes)
         logger.info('unmounting volumes %s', volumes)
         for vol in volumes:
-            #first unmount
+            # first unmount
             self.pre_unmount(vol)
             try:
                 vol.unmount()
             except exceptions.UnmountException, e:
                 logger.warn(e)
             try:
-                #now detach
+                # now detach
                 volume_id = self.get_volume_id(vol)
                 self.detach_volume(vol, volume_id)
             except Exception, e:
@@ -216,7 +216,7 @@ class Snapshotter(object):
 
         Subsequently mounts the volume to the given mount point
         '''
-        #catch this at a higher level if we want to skip
+        # catch this at a higher level if we want to skip
         if os.path.exists(vol.instance_device):
             error_message = 'Device %s already exists' % vol.instance_device
             error_message += '\n run with --ignore-mounted to proceed'
@@ -250,7 +250,7 @@ class Snapshotter(object):
         '''
         if os.path.exists(ebs_volume.instance_device):
             logger.warn("The device %s already exists.",
-                ebs_volume.instance_device)
+                        ebs_volume.instance_device)
         # attaching a volume to our instance
 
         message_format = 'Attaching volume %s to instance %s'
@@ -366,7 +366,7 @@ class Snapshotter(object):
             raise exceptions.MissingSnapshot(e.message)
         return latest_snapshot
 
-    #Example, Redis.goteam.be snapshot of /mnt/persistent/
+    # Example, Redis.goteam.be snapshot of /mnt/persistent/
     SNAPSHOT_DESCRIPTION_FORMAT = "%(cluster)s snapshot of %(mount_point)s"
 
     def get_snapshot_description(self, vol):

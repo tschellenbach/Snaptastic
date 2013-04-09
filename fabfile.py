@@ -1,7 +1,6 @@
 from fabric.api import local, cd
-from facebook_example.settings import BASE_ROOT
 import os
-PROJECT_ROOT = os.path.abspath(os.path.join(BASE_ROOT, '../'))
+PROJECT_ROOT = os.path.abspath(os.path.join(__file__, '../'))
 
 
 def publish(test='yes'):

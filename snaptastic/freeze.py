@@ -35,5 +35,5 @@ class Freeze(object):
                                 stderr=subprocess.STDOUT)
 
 
-#normalizing name for context manager usage
+# normalizing name for context manager usage
 freeze = Freeze

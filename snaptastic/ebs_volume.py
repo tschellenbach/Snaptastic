@@ -56,7 +56,7 @@ class EBSVolume(object):
         self.iops = iops
         if check_support:
             self.ensure_filesytem_supported()
-            
+
     @property
     def volume_type(self):
         volume_type = 'standard'
