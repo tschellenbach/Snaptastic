@@ -9,6 +9,9 @@ sys.path.append(parent)
 
 from argh import command, ArghParser
 from snaptastic import get_snapshotter
+# make sure we already setup the settings
+# this needs to be done before configuring the log level
+from snaptastic import settings
 import json
 
 
