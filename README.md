@@ -270,11 +270,30 @@ snaptastic mount-snapshots solr --loglevel=WARNING
 If you need more detailed control over logging you can change the LOGGING_CONFIG
 dictionary in snaptastic_settings.py used by the python logging module.
 
+The volume object
+-----------------
+
+**basic 200GB volume**
+```python
+EBSVolume('/dev/sdf1', '/var/lib/postgresql/9.1/main', 200),
+```
+
+**now with IOPS**
+```python
+EBSVolume('/dev/sdf1', '/var/lib/postgresql/9.1/main', 200, iops=1600),
+```
+
+**now for EXT4**
+```python
+EBSVolume('/dev/sdf1', '/var/lib/postgresql/9.1/main', 200, file_system=FILESYSTEMS.EXT4),
+```
+
+
 Todo
 ----
 
 * Provisioned IOPS support
-* Integrated cleanup
+* Integrated cleanup scripts
 * Auto terminate volumes after instance termination
 * Auto detect region for cross region usage
 
