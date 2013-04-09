@@ -3,8 +3,6 @@ import os
 from time import sleep
 from datetime import timedelta, datetime
 
-from boto.utils import get_instance_metadata
-
 from snaptastic import exceptions
 from snaptastic import get_ec2_conn
 from snaptastic import metaclass
@@ -52,6 +50,7 @@ class Snapshotter(object):
         :param bdm: dictionary describing the device mapping
 
         '''
+        from boto.utils import get_instance_metadata
         self.userdata = get_userdata_dict() if userdata is None else userdata
         self.metadata = get_instance_metadata(
         ) if metadata is None else metadata
