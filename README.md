@@ -86,6 +86,13 @@ check to see if /mnt/solr/ is actually gone
 snaptastic mount-snapshots solr
 ```
 
+**changing the loglevel for a cronjob**
+```python
+snaptastic mount-snapshots solr --loglevel=WARNING
+```
+
+
+
 customizing the tagging
 -----------------------
 
@@ -246,12 +253,30 @@ Doing so is quite easy:
 
 sudo snaptastic make-snapshots solr --userdata='{"role": "solr", "cluster": "solr", "environment": "aws"}'
 
+
+Cronjobs and logging
+--------------------
+
+Changing the loglevel is really easy. Simply call any of the commands with the --loglevel option.
+Internally this uses the python logging module. So valid options are:
+DEBUG,INFO,WARNING,ERROR,CRITICAL
+For cronjobs I recommend settings it to WARNING
+
+**changing the loglevel**
+```python
+snaptastic mount-snapshots solr --loglevel=WARNING
+```
+
+If you need more detailed control over logging you can change the LOGGING_CONFIG
+dictionary in snaptastic_settings.py used by the python logging module.
+
 Todo
 ----
 
+* Provisioned IOPS support
+* Integrated cleanup
 * Auto terminate volumes after instance termination
 * Auto detect region for cross region usage
-* Ext4 support
 
 Contributing & Project Workflow
 -------------------------------
