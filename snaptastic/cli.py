@@ -20,21 +20,33 @@ def configure_snapshotter(snapshotter_name, userdata=None):
     return snap
 
 
+def congfigure_log_level(level):
+    '''
+    Setup the root log level to the level specified in the string loglevel
+    '''
+    level_object = getattr(logging, level)
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level_object)
+
+
 @command
-def make_snapshots(snapshotter_name, userdata=None, verbosity=2):
+def make_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG'):
+    congfigure_log_level(loglevel)
     snap = configure_snapshotter(snapshotter_name, userdata)
     snap.make_snapshots()
 
 
 @command
-def mount_snapshots(snapshotter_name, userdata=None, verbosity=2,
+def mount_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG',
                     ignore_mounted=False):
+    congfigure_log_level(loglevel)
     snap = configure_snapshotter(snapshotter_name, userdata)
     snap.mount_snapshots(ignore_mounted=ignore_mounted)
 
 
 @command
-def unmount_snapshots(snapshotter_name, userdata=None, verbosity=2):
+def unmount_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG'):
+    congfigure_log_level(loglevel)
     unmount = raw_input("Are you sure you want to unmount?: ")
     if unmount in ['y', 'yeay', 'yes']:
         snap = configure_snapshotter(snapshotter_name, userdata)
@@ -42,7 +54,8 @@ def unmount_snapshots(snapshotter_name, userdata=None, verbosity=2):
 
 
 @command
-def list_volumes(snapshotter_name, userdata=None, verbosity=2):
+def list_volumes(snapshotter_name, userdata=None, loglevel='DEBUG'):
+    congfigure_log_level(loglevel)
     snap = configure_snapshotter(snapshotter_name, userdata)
     volumes = snap.get_volumes()
     for volume in volumes:
@@ -50,7 +63,8 @@ def list_volumes(snapshotter_name, userdata=None, verbosity=2):
 
 
 @command
-def clean(component, userdata=None, force=False, verbosity=2):
+def clean(component, userdata=None, force=False, loglevel='DEBUG'):
+    congfigure_log_level(loglevel)
     from snaptastic.cleaner import Cleaner
     run = True
     if not force:
@@ -62,7 +76,7 @@ def clean(component, userdata=None, force=False, verbosity=2):
 
 
 @command
-def test(verbosity=2):
+def test(loglevel='DEBUG'):
     from snaptastic.utils import get_userdata_dict
     logger.info('trying to get userdata, requires boto and valid keys')
     try:
@@ -80,15 +94,17 @@ def test(verbosity=2):
 
 
 def main():
-    pass
-
-from snaptastic import __version__
-if '--version' in sys.argv:
-    print 'Snaptastic version %s' % __version__
-
-
-p = ArghParser()
-commands = [make_snapshots, mount_snapshots,
-            list_volumes, unmount_snapshots, clean, test]
-p.add_commands(commands)
-p.dispatch()
+    from snaptastic import __version__
+    if '--version' in sys.argv:
+        print 'Snaptastic version %s' % __version__
+    
+    
+    p = ArghParser()
+    commands = [make_snapshots, mount_snapshots,
+                list_volumes, unmount_snapshots, clean, test]
+    p.add_commands(commands)
+    p.dispatch()
+    
+    
+if __name__ == '__main__':
+    main()

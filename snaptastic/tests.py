@@ -33,7 +33,7 @@ class BaseTest(unittest2.TestCase):
         return snap
 
 
-class TestFreeze(unittest2.TestCase):
+class TestFreeze(BaseTest):
     def test_freeze(self):
         with mock.patch('subprocess.check_output') as check:
             with mock.patch('snaptastic.utils.is_root_dev', return_value=False):
@@ -112,6 +112,19 @@ class TestMounting(BaseTest):
         with mock.patch('subprocess.check_output'):
             with mock.patch('os.makedirs'):
                 mounted = snap.mount_snapshots([volume])
+
+
+class TestLogLevel(BaseTest):
+    def test_loglevel(self):
+        import logging
+        from snaptastic.cli import congfigure_log_level
+        for level in ['DEBUG', 'INFO', 'ERROR']:
+            congfigure_log_level(level)
+            level_object = getattr(logging, level)
+            root_logger = logging.getLogger()
+            set_level = root_logger.getEffectiveLevel()
+            self.assertEqual(level_object, set_level)
+            
 
 
 if __name__ == '__main__':

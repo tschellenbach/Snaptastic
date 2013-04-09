@@ -220,6 +220,7 @@ class Snapshotter(object):
         #catch this at a higher level if we want to skip
         if os.path.exists(vol.instance_device):
             error_message = 'Device %s already exists' % vol.instance_device
+            error_message += '\n run with --ignore-mounted to proceed'
             raise exceptions.DeviceAlreadyExists(error_message)
 
         # we always create a new volume when mounting upon boot
@@ -243,8 +244,8 @@ class Snapshotter(object):
         Attaches the given boto_volume class to the running instance
         '''
         if os.path.exists(ebs_volume.instance_device):
-            logger.warn("The device {} already exists.".format(
-                ebs_volume.instance_device))
+            logger.warn("The device %s already exists.",
+                ebs_volume.instance_device)
         # attaching a volume to our instance
 
         message_format = 'Attaching volume %s to instance %s'
