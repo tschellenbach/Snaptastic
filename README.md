@@ -11,6 +11,7 @@ About the Author
 
  - Thierry Schellenbach, Founder & CTO at Fashiolista
  - Mike Ryan, Syadmin at Fashiolista
+ - Peter van Kampen, Developer at Fashiolista
 
 ![Travis CI](https://secure.travis-ci.org/tschellenbach/Snaptastic.png?branch=master "Travis CI")
 
