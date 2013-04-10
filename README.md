@@ -292,7 +292,6 @@ EBSVolume('/dev/sdf1', '/var/lib/postgresql/9.1/main', 200, file_system=FILESYST
 Todo
 ----
 
-* Provisioned IOPS support
 * Integrated cleanup scripts
 * Auto terminate volumes after instance termination
 * Auto detect region for cross region usage

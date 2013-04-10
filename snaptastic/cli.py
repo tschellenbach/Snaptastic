@@ -9,8 +9,6 @@ sys.path.append(parent)
 
 from argh import command, ArghParser
 from snaptastic import get_snapshotter
-# make sure we already setup the settings
-# this needs to be done before configuring the log level
 from snaptastic import settings
 import json
 
@@ -27,9 +25,19 @@ def congfigure_log_level(level):
     '''
     Setup the root log level to the level specified in the string loglevel
     '''
+    from snaptastic import settings
     level_object = getattr(logging, level)
     root_logger = logging.getLogger()
     root_logger.setLevel(level_object)
+
+    snaptastic_logger = logging.getLogger('snaptastic')
+    handlers = snaptastic_logger.handlers
+    for handler in handlers:
+        if isinstance(handler, logging.StreamHandler):
+            handler.setLevel(level_object)
+    # This is a bit of hack but we can only log about this after logging has been
+    # properly setup :)
+    logger.info('found settings at %s', settings.SETTINGS_MODULE)
 
 
 @command

@@ -129,6 +129,8 @@ class TestMounting(BaseTest):
 class TestLogLevel(BaseTest):
     def test_loglevel(self):
         import logging
+        # make sure settings are imported
+        from snaptastic import settings
         from snaptastic.cli import congfigure_log_level
         for level in ['DEBUG', 'INFO', 'ERROR']:
             congfigure_log_level(level)

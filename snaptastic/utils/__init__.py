@@ -50,7 +50,6 @@ def setup_file_logging(LOGGING_CONFIG):
     '''
     from copy import deepcopy
     LOGGING_CONFIG = deepcopy(LOGGING_CONFIG)
-    from snaptastic.utils.log import dictConfig
     try:
         error_log_path = os.path.join('/var', 'log', 'snaptastic', 'error.log')
         log_path = os.path.join('/var', 'log', 'snaptastic', 'info.log')
@@ -81,9 +80,7 @@ def setup_file_logging(LOGGING_CONFIG):
         FILE_LOGGING_CONFIG['handlers'].update(FILE_HANDLERS)
         FILE_LOGGING_CONFIG['loggers']['snaptastic']['handlers'] = [
             'default', 'file', 'error_file']
-        dictConfig(FILE_LOGGING_CONFIG)
         LOGGING_CONFIG = FILE_LOGGING_CONFIG
     except (ValueError, IOError, OSError), e:
         logger.warn('WARNING couldnt write log to files, got error %s', e)
-        dictConfig(LOGGING_CONFIG)
     return LOGGING_CONFIG
