@@ -21,6 +21,7 @@ def get_settings_module():
        and /etc/snaptastic_settings.py
        and /etc/snaptastic/snaptastic_settings.py
     '''
+    settings_module = None
     try:
         import snaptastic_settings
         settings_module = snaptastic_settings
@@ -35,7 +36,7 @@ def get_settings_module():
             error_message = error_format % SETTING_FILE_LOCATIONS
             logger.warn(error_message)
 
-        return settings_module
+    return settings_module
 
 
 SETTINGS_MODULE = get_settings_module()
