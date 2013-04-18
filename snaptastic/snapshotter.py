@@ -125,13 +125,21 @@ class Snapshotter(object):
         add_tags(snapshot, tags)
         return snapshot
 
-    def mount_snapshots(self, volumes=None, ignore_mounted=False):
+    def mount_snapshots(self, volumes=None, ignore_mounted=False, dry_run=False):
         ''' Loops through the volumes and runs mount_volume on them
 
         When ignore_mounted is True it will ignore DeviceAlreadyExists errors
         '''
         volumes = volumes or self.get_volumes()
         logger.info('preparing to mount %s volumes', len(volumes))
+        
+        # TODO, ugly code here for testing purpose
+        if dry_run:
+            for vol in volumes:
+                snapshot_id = self.get_snapshot(ebs_volume)
+                logger.info('for volume %s found snapshot %s', vol, snapshot_id)
+            return volumes
+        
         self.pre_mounts(volumes)
         for vol in volumes:
             self.pre_mount(vol)

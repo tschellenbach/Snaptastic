@@ -49,10 +49,10 @@ def make_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG'):
 
 @command
 def mount_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG',
-                    ignore_mounted=False):
+                    ignore_mounted=False, dry_run=False):
     congfigure_log_level(loglevel)
     snap = configure_snapshotter(snapshotter_name, userdata)
-    snap.mount_snapshots(ignore_mounted=ignore_mounted)
+    snap.mount_snapshots(ignore_mounted=ignore_mounted, dry_run=dry_run)
 
 
 @command
