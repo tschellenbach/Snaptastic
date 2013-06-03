@@ -25,7 +25,7 @@ def get_settings_module():
     try:
         import snaptastic_settings
         settings_module = snaptastic_settings
-    except ImportError, e:
+    except ImportError:
         for settings_file in SETTING_FILE_LOCATIONS:
             if os.path.isfile(settings_file):
                 settings_module = imp.load_source(

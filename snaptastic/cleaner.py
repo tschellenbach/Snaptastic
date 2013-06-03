@@ -1,12 +1,7 @@
-import os
 import datetime
 import collections
-from boto.ec2.connection import EC2Connection
-from boto.ec2 import regions as get_regions
 import logging
 from snaptastic import get_ec2_conn, get_cloudwatch_conn
-from boto.utils import get_instance_metadata
-from snaptastic.utils import get_userdata_dict
 logger = logging.getLogger(__name__)
 
 

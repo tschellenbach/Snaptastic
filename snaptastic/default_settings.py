@@ -1,8 +1,6 @@
 
 import logging
 from snaptastic.utils import setup_file_logging
-import sys
-import os
 
 logger = logging.getLogger(__name__)
 

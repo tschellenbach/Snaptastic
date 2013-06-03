@@ -136,7 +136,7 @@ class Snapshotter(object):
         # TODO, ugly code here for testing purpose
         if dry_run:
             for vol in volumes:
-                snapshot_id = self.get_snapshot(ebs_volume)
+                snapshot_id = self.get_snapshot(vol)
                 logger.info('for volume %s found snapshot %s', vol, snapshot_id)
             return volumes
 
