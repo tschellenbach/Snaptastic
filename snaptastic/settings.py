@@ -1,7 +1,7 @@
 from snaptastic.default_settings import *
 import imp
 import logging
-
+import os
 
 logger = logging.getLogger(__name__)
 
