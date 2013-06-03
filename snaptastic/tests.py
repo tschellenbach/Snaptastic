@@ -12,7 +12,7 @@ from snaptastic import EBSVolume
 from snaptastic.freeze import freeze
 from snaptastic import Snapshotter
 from snaptastic.ebs_volume import FILESYSTEMS as FS
-
+from snaptastic import exceptions
 
 class BaseTest(unittest2.TestCase):
     def setUp(self):
@@ -30,6 +30,7 @@ class BaseTest(unittest2.TestCase):
         mapping['/dev/sdf'] = mock.Mock()
         bdm['blockDeviceMapping'] = mapping
         snap = Snapshotter(userdata, metadata, con, bdm)
+        snap.sleep = mock.Mock()
         return snap
 
 
@@ -108,23 +109,56 @@ class TestMounting(BaseTest):
         volume = EBSVolume(
             device='/dev/sdf', mount_point='/mnt/test', size=5,
             check_support=False)
-        snap.get_snapshot = mock.Mock(return_value='1234')
+        snap.get_snapshot = mock.Mock()
         snap.attach_volume = mock.Mock()
+        snap.mount_snapshots_barrier = mock.Mock()
         with mock.patch('subprocess.check_output'):
             with mock.patch('os.makedirs'):
-                mounted = snap.mount_snapshots([volume])
+                snap.mount_snapshots([volume])
 
     def test_mount_iops_snapshots(self):
         snap = self.get_test_snapshotter()
         volume = EBSVolume(
             device='/dev/sdf', mount_point='/mnt/test', size=5, iops=1600,
             check_support=False)
-        snap.get_snapshot = mock.Mock(return_value='1234')
+        snap.get_snapshot = mock.Mock()
         snap.attach_volume = mock.Mock()
+        snap.mount_snapshots_barrier = mock.Mock()
         with mock.patch('subprocess.check_output'):
             with mock.patch('os.makedirs'):
-                mounted = snap.mount_snapshots([volume])
+                snap.mount_snapshots([volume])
 
+    def test_not_ready_snapshots_max_retries(self):
+        snap = self.get_test_snapshotter()
+        not_ready_snapshot = mock.Mock()
+        snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
+        try:
+            snap.mount_snapshots_barrier(['volume 1'], max_retries=3)
+        except exceptions.MissingSnapshot: pass
+        assert snap.sleep.call_count == 3
+
+    def test_not_ready_snapshots_exit(self):
+        snap = self.get_test_snapshotter()
+        not_ready_snapshot = mock.Mock()
+        snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
+        with self.assertRaises(exceptions.MissingSnapshot):
+            snap.mount_snapshots_barrier(['volume 1'])
+
+    def test_ready_snapshots(self):
+        snap = self.get_test_snapshotter()
+        not_ready_snapshot = mock.Mock()
+        not_ready_snapshot.status.return_value = 'completed'
+        snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
+        snap.mount_snapshots_barrier(['volume 1'])
+
+    def test_ready_snapshots_retry_ok(self):
+        in_progress = ['completed', 'not ready', 'not ready']
+        snap = self.get_test_snapshotter()
+        not_ready_snapshot = mock.Mock()
+        not_ready_snapshot.status.side_effect = lambda *x: in_progress.pop()
+        snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
+        snap.mount_snapshots_barrier(['volume 1'])
+        assert snap.sleep.call_count == 2
 
 class TestLogLevel(BaseTest):
     def test_loglevel(self):
