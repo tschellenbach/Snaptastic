@@ -25,7 +25,6 @@ def configure_log_level(level):
     '''
     Setup the root log level to the level specified in the string loglevel
     '''
-    from snaptastic import settings
     level_object = getattr(logging, level)
     root_logger = logging.getLogger()
     root_logger.setLevel(level_object)
