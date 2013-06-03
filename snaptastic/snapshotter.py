@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 from time import sleep
 from datetime import timedelta, datetime
 
