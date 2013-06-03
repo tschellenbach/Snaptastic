@@ -31,7 +31,7 @@ class Snapshotter(object):
     - pre_snapshots, post_snapshots
     '''
     SNAPSHOT_EXPIRY_DAYS = 7
-    NOT_READY_SNAPSHOT_SLEEP = 120
+    NOT_READY_SNAPSHOT_SLEEP = 2
     name = None
 
     __metaclass__ = metaclass.SnapshotterRegisteringMetaClass
@@ -131,11 +131,22 @@ class Snapshotter(object):
         if hasattr(self, '_snapshots'):
             del self._snapshots
 
-    def sleep(self, seconds):
-        sleep(seconds)
+    def wait_before_attempt(self, attempt_number):
+        '''
+        Waits an linearly increasing amount of time based on the number of attempts
+        already done.
 
-    def mount_snapshots_barrier(self, volumes, max_retries=12):
-        ''' Make sure all volumes have a ready to mount snapshot
+        It is used to sleep between multiple attempts (eg. request polling)
+
+        :param attempt_number: the number of attempts already done
+
+        '''
+        seconds_to_sleep = attempt_number * self.NOT_READY_SNAPSHOT_SLEEP
+        sleep(seconds_to_sleep)
+
+    def wait_for_snapshots(self, volumes, max_retries=12):
+        ''' 
+        Make sure all volumes have a ready to mount snapshot
         before starting to mount them
         '''
         retries = 0
@@ -149,7 +160,7 @@ class Snapshotter(object):
                 raise exceptions.MissingSnapshot('Snapshots are not ready after %s attempts, aborting...' % retries)
             retries += 1
             logger.info('Waiting %s seconds for volumes %s to have ready snapshots' % (not_ready, self.NOT_READY_SNAPSHOT_SLEEP))
-            self.sleep(self.NOT_READY_SNAPSHOT_SLEEP)
+            self.wait_before_attempt(retries)
 
     def mount_snapshots(self, volumes=None, ignore_mounted=False, dry_run=False):
         ''' Loops through the volumes and runs mount_volume on them
@@ -166,7 +177,7 @@ class Snapshotter(object):
                 logger.info('for volume %s found snapshot %s', vol, snapshot_id)
             return volumes
 
-        self.mount_snapshots_barrier(volumes)
+        self.wait_for_snapshots(volumes)
         self.pre_mounts(volumes)
 
         for vol in volumes:
