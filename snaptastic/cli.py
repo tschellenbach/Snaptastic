@@ -21,7 +21,7 @@ def configure_snapshotter(snapshotter_name, userdata=None):
     return snap
 
 
-def congfigure_log_level(level):
+def configure_log_level(level):
     '''
     Setup the root log level to the level specified in the string loglevel
     '''
@@ -42,7 +42,7 @@ def congfigure_log_level(level):
 
 @command
 def make_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG'):
-    congfigure_log_level(loglevel)
+    configure_log_level(loglevel)
     snap = configure_snapshotter(snapshotter_name, userdata)
     snap.make_snapshots()
 
@@ -50,14 +50,14 @@ def make_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG'):
 @command
 def mount_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG',
                     ignore_mounted=False, dry_run=False):
-    congfigure_log_level(loglevel)
+    configure_log_level(loglevel)
     snap = configure_snapshotter(snapshotter_name, userdata)
     snap.mount_snapshots(ignore_mounted=ignore_mounted, dry_run=dry_run)
 
 
 @command
 def unmount_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG'):
-    congfigure_log_level(loglevel)
+    configure_log_level(loglevel)
     unmount = raw_input("Are you sure you want to unmount?: ")
     if unmount in ['y', 'yeay', 'yes']:
         snap = configure_snapshotter(snapshotter_name, userdata)
@@ -66,7 +66,7 @@ def unmount_snapshots(snapshotter_name, userdata=None, loglevel='DEBUG'):
 
 @command
 def list_volumes(snapshotter_name, userdata=None, loglevel='DEBUG'):
-    congfigure_log_level(loglevel)
+    configure_log_level(loglevel)
     snap = configure_snapshotter(snapshotter_name, userdata)
     volumes = snap.get_volumes()
     for volume in volumes:
@@ -75,7 +75,7 @@ def list_volumes(snapshotter_name, userdata=None, loglevel='DEBUG'):
 
 @command
 def clean(component, userdata=None, force=False, loglevel='DEBUG'):
-    congfigure_log_level(loglevel)
+    configure_log_level(loglevel)
     from snaptastic.cleaner import Cleaner
     run = True
     if not force:
