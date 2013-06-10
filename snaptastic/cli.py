@@ -103,13 +103,22 @@ def test(loglevel='DEBUG'):
         logger.exception('Metadata lookup doesnt work, error %s', e)
 
 
+@command
+def check_backups(age, environment, cluster, role, loglevel='DEBUG'):
+    from snaptastic.utils import check_backups
+    from snaptastic.utils import age_to_seconds
+    max_age = age_to_seconds(age)
+    missing = check_backups(max_age, environment=environment, cluster=cluster, role=role)
+    sys.exit(missing > 0 and 1 or 0)
+
+
 def main():
     from snaptastic import __version__
     if '--version' in sys.argv:
         print 'Snaptastic version %s' % __version__
 
     p = ArghParser()
-    commands = [make_snapshots, mount_snapshots,
+    commands = [make_snapshots, mount_snapshots, check_backups,
                 list_volumes, unmount_snapshots, clean, test]
     p.add_commands(commands)
     p.dispatch()

@@ -144,7 +144,7 @@ class Snapshotter(object):
         sleep(seconds_to_sleep)
 
     def wait_for_snapshots(self, volumes, max_retries=12):
-        ''' 
+        '''
         Make sure all volumes have a ready to mount snapshot
         before starting to mount them
         '''
