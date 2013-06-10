@@ -1,9 +1,8 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
-import dateutil.parser
 import logging
 import os
-import pytz
+
 
 logger = logging.getLogger(__name__)
 
@@ -104,6 +103,9 @@ def age_to_seconds(age):
 
 
 def check_backups(max_age, environment, cluster, role):
+    import dateutil.parser
+    import pytz
+
     ec2 = get_ec2_conn()
     now = datetime.utcnow().replace(tzinfo=pytz.utc)
 
