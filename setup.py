@@ -20,6 +20,7 @@ install_requires = [
     'argh',
     'argparse',
     'dateutils==0.6.6',
+    'pytz==2013b',
 ]
 
 license_text = open('LICENSE.txt').read()
