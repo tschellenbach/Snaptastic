@@ -153,8 +153,8 @@ def check_backups(max_age, environment, cluster, role):
                 mountpoints.pop(mp)
 
     if len(mountpoints.keys()) > 0:
-        logger.warning("Some volumes are missing a recent snapshot " \
-            "(cluster={}, env={}, role={}):".format(cluster, environment, role))
+        logger.warning("Some volumes are missing a recent snapshot \
+            (cluster={}, env={}, role={}):".format(cluster, environment, role))
 
         for mp in mountpoints:
             logger.warning("\t* {} on volume(s) {}".format(

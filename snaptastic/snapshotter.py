@@ -92,18 +92,21 @@ class Snapshotter(object):
         '''
         Make snapshots of all the volumes
         '''
-        snapshots = []
         volumes = volumes or self.get_volumes()
         logger.info('making snapshots of %s volumes', len(volumes))
-        # hook for customizing the behaviour before snapshots
         self.pre_snapshots(volumes)
+        try:
+            return self._make_snapshots(volumes)
+        finally:
+            self.post_snapshots(volumes)
+
+    def _make_snapshots(self, volumes):
+        snapshots = []
         for vol in volumes:
             self.pre_snapshot(vol)
             snapshot = self.make_snapshot(vol)
             snapshots.append(snapshot)
             self.post_snapshot(vol)
-        # hook for customizing the behavior after snapshots
-        self.post_snapshots(volumes)
         return snapshots
 
     def make_snapshot(self, vol):

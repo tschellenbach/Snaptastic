@@ -14,6 +14,7 @@ from snaptastic import Snapshotter
 from snaptastic.ebs_volume import FILESYSTEMS as FS
 from snaptastic import exceptions
 
+
 class BaseTest(unittest2.TestCase):
     def setUp(self):
         pass
@@ -134,7 +135,8 @@ class TestMounting(BaseTest):
         snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
         try:
             snap.wait_for_snapshots(['volume 1'], max_retries=3)
-        except exceptions.MissingSnapshot: pass
+        except exceptions.MissingSnapshot:
+            pass
         assert snap.wait_before_attempt.call_count == 3
 
     def test_not_ready_snapshots_exit(self):
@@ -159,6 +161,7 @@ class TestMounting(BaseTest):
         snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
         snap.wait_for_snapshots(['volume 1'])
         assert snap.wait_before_attempt.call_count == 2
+
 
 class TestLogLevel(BaseTest):
     def test_loglevel(self):
