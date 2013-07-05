@@ -155,13 +155,16 @@ class Snapshotter(object):
         not_ready = [volumes]
         while len(not_ready) > 0:
             self.clear_snapshot_cache()
-            not_ready = [vol for vol in volumes if self.get_snapshot(vol).status() != 'completed']
+            not_ready = [vol for vol in volumes if self.get_snapshot(
+                vol).status() != 'completed']
             if not_ready == []:
                 break
             if retries >= max_retries:
-                raise exceptions.MissingSnapshot('Snapshots are not ready after %s attempts, aborting...' % retries)
+                raise exceptions.MissingSnapshot(
+                    'Snapshots are not ready after %s attempts, aborting...' % retries)
             retries += 1
-            logger.info('Waiting %s seconds for volumes %s to have ready snapshots' % (not_ready, self.NOT_READY_SNAPSHOT_SLEEP))
+            logger.info('Waiting %s seconds for volumes %s to have ready snapshots' % (
+                not_ready, self.NOT_READY_SNAPSHOT_SLEEP))
             self.wait_before_attempt(retries)
 
     def mount_snapshots(self, volumes=None, ignore_mounted=False, dry_run=False):
@@ -176,7 +179,8 @@ class Snapshotter(object):
         if dry_run:
             for vol in volumes:
                 snapshot_id = self.get_snapshot(vol)
-                logger.info('for volume %s found snapshot %s', vol, snapshot_id)
+                logger.info(
+                    'for volume %s found snapshot %s', vol, snapshot_id)
             return volumes
 
         self.wait_for_snapshots(volumes)

@@ -108,7 +108,8 @@ def check_backups(age, environment, cluster, role, loglevel='DEBUG'):
     from snaptastic.utils import check_backups
     from snaptastic.utils import age_to_seconds
     max_age = age_to_seconds(age)
-    missing = check_backups(max_age, environment=environment, cluster=cluster, role=role)
+    missing = check_backups(
+        max_age, environment=environment, cluster=cluster, role=role)
     sys.exit(missing > 0 and 1 or 0)
 
 

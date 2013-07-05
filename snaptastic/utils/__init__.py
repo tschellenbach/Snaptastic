@@ -98,7 +98,8 @@ def age_to_seconds(age):
     }
     token = age[-1:].lower()
     if token not in TIME_PERIODS:
-        raise TypeError('malformed time period, should be in %s' % TIME_PERIODS.keys())
+        raise TypeError('malformed time period, should be in %s' %
+                        TIME_PERIODS.keys())
     return int(age[:-1]) * TIME_PERIODS[token]
 
 
