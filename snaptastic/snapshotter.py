@@ -192,7 +192,7 @@ class Snapshotter(object):
                 self.mount_snapshot(vol)
             except exceptions.DeviceAlreadyExists:
                 if ignore_mounted:
-                    logger.info("Ignoring {}".format(vol))
+                    logger.info("Ignoring {0}".format(vol))
                 else:
                     raise
 
