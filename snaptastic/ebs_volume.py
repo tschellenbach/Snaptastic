@@ -84,23 +84,24 @@ class EBSVolume(object):
     def instance_device(self):
         '''
         EC2 places the device under /dev/sdf in /dev/xvdf.
-        
+
         Some AMIs before further translation of the requested and actual
         device name. e.g. the CentOS AMI will attach /dev/sdj if you request
         /dev/sdf. Fortunately this offset is consistent. Use the device_name_offset
         parameter to control this:
-            
-        volume = EBSVolume('/dev/sdf', '/mnt/somedir', size=20, device_name_offset=4)
+
+        volume = EBSVolume(
+            '/dev/sdf', '/mnt/somedir', size=20, device_name_offset=4)
 
         This would result in a device named /dev/sdj.
 
         '''
         device = self.device.replace('sd', 'xvd')
 
-
         if self.device_name_offset != 0:
             # If the offset is 4, change e.g. sdf -> sdj
-            device = device[:-1] + chr(ord(device[-1]) + self.device_name_offset)
+            device = device[:-1] + chr(ord(device[-1]) +
+                                       self.device_name_offset)
 
         return device
 
