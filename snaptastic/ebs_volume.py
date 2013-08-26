@@ -46,7 +46,7 @@ class EBSVolume(object):
 
     def __init__(self, device, mount_point, size=5, delete_on_termination=True,
                  file_system=FILESYSTEMS.XFS, mount_options="defaults",
-                 check_support=True, iops=False, device_name_offset=None):
+                 check_support=True, iops=False, device_name_offset=0):
         self.device = device
         self.size = size
         self.mount_point = mount_point
