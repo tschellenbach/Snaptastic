@@ -16,7 +16,7 @@ tests_require = [
 ]
 
 install_requires = [
-    'boto>=2.9.5',
+    'boto>=2.10.0',
     'argh',
     'argparse',
     'dateutils==0.6.6',
