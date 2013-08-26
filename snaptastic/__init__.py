@@ -5,7 +5,7 @@ __copyright__ = 'Copyright 2012, Thierry Schellenbach'
 __credits__ = [
     'Mike Ryan, Thierry Schellenbach, mellowmorning.com, @tschellenbach']
 __license__ = 'BSD'
-__version__ = '0.2.9'
+__version__ = '0.2.10'
 __maintainer__ = 'Thierry Schellenbach'
 __email__ = 'thierryschellenbach@gmail.com'
 __status__ = 'Production'
