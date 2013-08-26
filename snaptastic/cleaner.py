@@ -172,7 +172,6 @@ class Cleaner(object):
 
     def get_expired_snapshots(self):
         our_amis = self.get_our_amis()
-        assert 'ami-6bd4d51f' in our_amis
         snapshots = self.get_our_snapshots()
         total_size = self.sum_snapshot_size(snapshots)
         print 'found %s snapshots in total, with size of %s GB' % (
