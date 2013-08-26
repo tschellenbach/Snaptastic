@@ -54,6 +54,7 @@ class EBSVolume(object):
         self.delete_on_termination = delete_on_termination
         self.file_system = file_system
         self.iops = iops
+        # Support for CentOS
         self.device_name_offset = device_name_offset
         if check_support:
             self.ensure_filesytem_supported()
