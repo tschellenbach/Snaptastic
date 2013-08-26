@@ -307,8 +307,9 @@ class Snapshotter(object):
         # waiting till the volume is available
         waited = 0
         MAX_VOLUME_AVAILABLE_WAIT = 45
-        while boto_volume.update() != 'available' and waited < MAX_ATTACHMENT_WAIT:
-            logger.info('Waiting for volume to become available %s' % boto_volume.id)
+        while boto_volume.update() != 'available' and waited < MAX_VOLUME_AVAILABLE_WAIT:
+            logger.info(
+                'Waiting for volume to become available %s' % boto_volume.id)
             sleep(1)
             waited += 1
 
