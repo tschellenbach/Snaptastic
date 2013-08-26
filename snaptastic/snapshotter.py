@@ -304,8 +304,15 @@ class Snapshotter(object):
         if os.path.exists(ebs_volume.instance_device):
             logger.warn("The device %s already exists.",
                         ebs_volume.instance_device)
-        # attaching a volume to our instance
+        # waiting till the volume is available
+        waited = 0
+        MAX_VOLUME_AVAILABLE_WAIT = 45
+        while boto_volume.update() != 'available' and waited < MAX_ATTACHMENT_WAIT:
+            logger.info('Waiting for volume to become available %s' % boto_volume.id)
+            sleep(1)
+            waited += 1
 
+        # attaching a volume to our instance
         message_format = 'Attaching volume %s to instance %s'
         logger.info(message_format, boto_volume.id, self.instance_id)
         self.con.attach_volume(
