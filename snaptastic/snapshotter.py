@@ -420,8 +420,10 @@ class Snapshotter(object):
         return latest_snapshot
 
     def get_snapshot_description_string(self):
-         # Example, Redis.goteam.be snapshot of /mnt/persistent/
-        return "%(cluster)s snapshot of %(mount_points)s"
+        '''
+        Example, Redis.goteam.be snapshot of /mnt/persistent/
+        '''
+        return "%(cluster)s snapshot of %(mount_point)s"
 
     def get_snapshot_description(self, vol):
         format_dict = dict(
