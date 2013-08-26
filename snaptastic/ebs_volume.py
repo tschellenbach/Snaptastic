@@ -46,7 +46,7 @@ class EBSVolume(object):
 
     def __init__(self, device, mount_point, size=5, delete_on_termination=True,
                  file_system=FILESYSTEMS.XFS, mount_options="defaults",
-                 check_support=True, iops=False):
+                 check_support=True, iops=False, device_name_offset=None):
         self.device = device
         self.size = size
         self.mount_point = mount_point
@@ -54,6 +54,7 @@ class EBSVolume(object):
         self.delete_on_termination = delete_on_termination
         self.file_system = file_system
         self.iops = iops
+        self.device_name_offset = device_name_offset
         if check_support:
             self.ensure_filesytem_supported()
 
@@ -81,9 +82,25 @@ class EBSVolume(object):
     @property
     def instance_device(self):
         '''
-        Ubuntu places the device under /dev/sdf in /dev/xvdf
+        EC2 places the device under /dev/sdf in /dev/xvdf.
+        
+        Some AMIs before further translation of the requested and actual
+        device name. e.g. the CentOS AMI will attach /dev/sdj if you request
+        /dev/sdf. Fortunately this offset is consistent. Use the device_name_offset
+        parameter to control this:
+            
+        volume = EBSVolume('/dev/sdf', '/mnt/somedir', size=20, device_name_offset=4)
+
+        This would result in a device named /dev/sdj.
+
         '''
         device = self.device.replace('sd', 'xvd')
+
+
+        if self.device_name_offset != 0:
+            # If the offset is 4, change e.g. sdf -> sdj
+            device = device[:-1] + chr(ord(device[-1]) + self.device_name_offset)
+
         return device
 
     def mount(self):

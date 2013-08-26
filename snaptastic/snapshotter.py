@@ -192,7 +192,7 @@ class Snapshotter(object):
                 self.mount_snapshot(vol)
             except exceptions.DeviceAlreadyExists:
                 if ignore_mounted:
-                    logger.info("Ignoring {}".format(vol))
+                    logger.info("Ignoring {0}".format(vol))
                 else:
                     raise
 
@@ -419,15 +419,16 @@ class Snapshotter(object):
             raise exceptions.MissingSnapshot(e.message)
         return latest_snapshot
 
-    # Example, Redis.goteam.be snapshot of /mnt/persistent/
-    SNAPSHOT_DESCRIPTION_FORMAT = "%(cluster)s snapshot of %(mount_point)s"
+    def get_snapshot_description_string(self):
+         # Example, Redis.goteam.be snapshot of /mnt/persistent/
+        return "%(cluster)s snapshot of %(mount_points)s"
 
     def get_snapshot_description(self, vol):
         format_dict = dict(
             mount_point=vol.mount_point
         )
         format_dict.update(self.userdata)
-        snapshot_name = self.SNAPSHOT_DESCRIPTION_FORMAT % format_dict
+        snapshot_name = self.get_snapshot_description_string() % format_dict
         snapshot_name = snapshot_name.replace('_', '-')
         return snapshot_name
 
