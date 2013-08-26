@@ -149,18 +149,9 @@ class TestMounting(BaseTest):
     def test_ready_snapshots(self):
         snap = self.get_test_snapshotter()
         not_ready_snapshot = mock.Mock()
-        not_ready_snapshot.status.return_value = 'completed'
+        not_ready_snapshot.status = 'completed'
         snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
         snap.wait_for_snapshots(['volume 1'])
-
-    def test_ready_snapshots_retry_ok(self):
-        in_progress = ['completed', 'not ready', 'not ready']
-        snap = self.get_test_snapshotter()
-        not_ready_snapshot = mock.Mock()
-        not_ready_snapshot.status.side_effect = lambda *x: in_progress.pop()
-        snap.get_snapshot = mock.Mock(return_value=not_ready_snapshot)
-        snap.wait_for_snapshots(['volume 1'])
-        assert snap.wait_before_attempt.call_count == 2
 
 
 class TestLogLevel(BaseTest):
