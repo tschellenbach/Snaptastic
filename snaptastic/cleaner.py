@@ -82,12 +82,12 @@ class Cleaner(object):
 
         logger.info('found %s instances with low cpu utilization',
                     len(low_utilized_instances))
-        from pprint import pprint
+        from pprint import pformat
         for instance in low_utilized_instances:
-            print '===' * 10
-            print instance
-            pprint(instance.get_attribute('userData'))
-            pprint(instance.tags)
+            logger.info('===' * 10)
+            logger.info(instance)
+            logger.info(pformat(instance.get_attribute('userData')))
+            logger.info(pformat(instance.tags))
 
     def get_owners(self):
         owners = ['612857642705']
@@ -143,7 +143,7 @@ class Cleaner(object):
 
     def delete_snapshots(self, snapshots):
         for snapshot in snapshots:
-            print 'removing snapshot %s' % snapshot
+            logger.info('removing snapshot %s' % snapshot)
             self.con.delete_snapshot(snapshot.id)
 
     def sum_snapshot_size(self, snapshots):
@@ -174,17 +174,15 @@ class Cleaner(object):
         our_amis = self.get_our_amis()
         snapshots = self.get_our_snapshots()
         total_size = self.sum_snapshot_size(snapshots)
-        print 'found %s snapshots in total, with size of %s GB' % (
-            len(snapshots), total_size)
-        print our_amis
+        logger.info('found %s snapshots in total, with size of %s GB' % (
+            len(snapshots), total_size))
+        logger.info(our_amis)
         non_ami_snapshots = [s for s in snapshots if not any(
             [a in s.description for a in our_amis])]
-        assert 'snap-7aa43b2c' not in non_ami_snapshots
-        print 'found %s non ami snapshots' % len(non_ami_snapshots)
+        logger.info('found %s non ami snapshots' % len(non_ami_snapshots))
         expired_snapshots = self.filter_expired_snapshots(non_ami_snapshots)
-        assert 'snap-7aa43b2c' not in expired_snapshots
-        print 'found %s rotten snapshots from %s snapshots in total' % (
-            len(expired_snapshots), len(non_ami_snapshots))
+        logger.info('found %s rotten snapshots from %s snapshots in total' % (
+            len(expired_snapshots), len(non_ami_snapshots)))
         return expired_snapshots
 
     def cleanup_snapshots(self):
@@ -206,12 +204,12 @@ class Cleaner(object):
     def cleanup_images(self):
         unused_amis = self.get_unused_amis()
         for ami in unused_amis:
-            print 'removing ami %s' % ami
+            logger.info('removing ami %s' % ami)
             self.con.deregister_image(ami, delete_snapshot=True)
 
     def delete_volumes(self, volumes):
         for v in volumes:
-            print 'removing volume v %s' % v.id
+            logger.info('removing volume v %s' % v.id)
             v.delete()
 
     def clean(self, component):
