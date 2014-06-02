@@ -155,8 +155,9 @@ class Snapshotter(object):
         not_ready = [volumes]
         while len(not_ready) > 0:
             self.clear_snapshot_cache()
-            not_ready = [vol for vol in volumes if self.get_snapshot(
-                vol).status != 'completed']
+            not_ready = [vol for vol in volumes
+                         if self.get_snapshot(vol)
+                         and self.get_snapshot(vol).status != 'completed']
             if not_ready == []:
                 break
             if retries >= max_retries:
