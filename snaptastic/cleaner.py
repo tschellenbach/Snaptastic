@@ -167,7 +167,7 @@ class Cleaner(object):
         elif expiry_delta:
             expiry_date = start_time + datetime.timedelta(days=expiry_delta)
         else:
-            expiry_date = start_time + datetime.timedelta(days=3)
+            expiry_date = start_time + datetime.timedelta(days=7)
         return expiry_date
 
     def get_expired_snapshots(self):

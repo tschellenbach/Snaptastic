@@ -433,7 +433,7 @@ class DictConfigurator(BaseConfigurator):
                 # Name of parameter changed from fmt to format.
                 # Retry with old name.
                 # This is so that code can be used with older Python versions
-                #(e.g. by Django)
+                # (e.g. by Django)
                 config['fmt'] = config.pop('format')
                 config['()'] = factory
                 result = self.configure_custom(config)
@@ -503,7 +503,7 @@ class DictConfigurator(BaseConfigurator):
             # The argument name changed from strm to stream
             # Retry with old name.
             # This is so that code can be used with older Python versions
-            #(e.g. by Django)
+            # (e.g. by Django)
             kwargs['strm'] = kwargs.pop('stream')
             result = factory(**kwargs)
         if formatter:

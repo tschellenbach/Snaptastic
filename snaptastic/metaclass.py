@@ -4,7 +4,7 @@ snapshotters = {}
 
 def get_snapshotter(snapshotter_name):
     error_format = 'No Snapshotter %s defined, registered Snapshotters are %s'
-    if not snapshotter_name in snapshotters:
+    if snapshotter_name not in snapshotters:
         raise ValueError(
             error_format % (snapshotter_name, snapshotters.keys()))
     return snapshotters[snapshotter_name]
